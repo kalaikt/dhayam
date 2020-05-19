@@ -2,11 +2,15 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Col, ColMid, ColEmpty } from "./Col";
 
-export const Row = ({ isTop, diceValue }: any) => {
+export const Row = ({ isTop, diceValue, onUpdatePath }: any) => {
+  const onUpdate = (location: string, i: number, layout: any) => {
+    onUpdatePath(location, i, layout);
+  };
+
   return (
     <View style={styles.row}>
       <ColEmpty isCenter="flase" />
-      <Col diceValue={diceValue} isTop={isTop} cells={25} />
+      <Col onUpdate={onUpdate} diceValue={diceValue} isTop={isTop} cells={25} />
       <ColEmpty isCenter="false" />
     </View>
   );
@@ -16,12 +20,16 @@ Row.defaultProps = {
   isTop: false,
 };
 
-export const RowMid = ({ diceValue }: any) => {
+export const RowMid = ({ diceValue, onUpdatePath }: any) => {
+  const onUpdate = (location: string, i: number, layout: any) => {
+    onUpdatePath(location, i, layout);
+  };
+
   return (
     <View style={styles.rowMid}>
-      <ColMid diceValue={diceValue} isLeft={true} />
+      <ColMid onUpdate={onUpdate} diceValue={diceValue} isLeft={true} />
       <ColEmpty isCenter="true" />
-      <ColMid diceValue={diceValue} isLeft={false} />
+      <ColMid onUpdate={onUpdate} diceValue={diceValue} isLeft={false} />
     </View>
   );
 };

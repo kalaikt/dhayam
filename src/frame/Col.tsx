@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Cell, CellMid } from "./Cell";
-import { TravelPath } from "./TravelPath";
 import { ColMidProps, ColProps, ColState } from "./ColInterface";
 
 export class Col extends React.Component<ColProps, ColState> {
@@ -16,12 +15,14 @@ export class Col extends React.Component<ColProps, ColState> {
     this.loadCell = this.loadCell.bind(this);
   }
 
-  onPress(isTop: Number, ind: any) {
+  onPress(isTop: boolean, ind: any, layout: any) {
+    this.props.onUpdate(isTop ? "top" : "bottom", ind, layout);
+
     if (isTop) {
-      this.state.cellList.top[ind].location = true;
+      this.state.cellList.top[ind].layout = layout;
       this.setState({ cellList: this.state.cellList });
     } else {
-      this.state.cellList.bottom[ind].location = true;
+      this.state.cellList.bottom[ind].layout = layout;
       this.setState({ cellList: this.state.cellList });
     }
 
@@ -29,12 +30,12 @@ export class Col extends React.Component<ColProps, ColState> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: any) {
-    const value = this.state.prevValue + nextProps.diceValue;
+    /* const value = this.state.prevValue + nextProps.diceValue;
     const cells = allCells();
     const path = TravelPath.playars[0][value];
 
     cells[path.location][path.position].location = true;
-    this.setState({ cellList: cells, prevValue: value });
+    this.setState({ cellList: cells, prevValue: value }); */
   }
 
   loadCell(cellsCount: Number, isTop: boolean) {
@@ -84,12 +85,14 @@ export class ColMid extends React.Component<ColMidProps, ColState> {
     this.loadMidCell = this.loadMidCell.bind(this);
   }
 
-  onPress(isLeft: Number, ind: any) {
+  onPress(isLeft: boolean, ind: any, layout: any) {
+    this.props.onUpdate(isLeft ? "left" : "right", ind, layout);
+
     if (isLeft) {
-      this.state.cellList.left[ind].location = true;
+      this.state.cellList.left[ind].layout = layout;
       this.setState({ cellList: this.state.cellList });
     } else {
-      this.state.cellList.right[ind].location = true;
+      this.state.cellList.right[ind].layout = layout;
       this.setState({ cellList: this.state.cellList });
     }
 
@@ -97,12 +100,12 @@ export class ColMid extends React.Component<ColMidProps, ColState> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: any) {
-    const value = this.state.prevValue + nextProps.diceValue;
+    /* const value = this.state.prevValue + nextProps.diceValue;
     const cells = allCells();
     const path = TravelPath.playars[0][value];
 
     cells[path.location][path.position].location = true;
-    this.setState({ cellList: cells, prevValue: value });
+    this.setState({ cellList: cells, prevValue: value }); */
   }
 
   loadMidCell(isLeft: boolean) {

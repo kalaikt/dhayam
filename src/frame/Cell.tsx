@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {
@@ -9,6 +9,8 @@ import {
 } from "./CellInterface";
 
 export class Cell extends React.Component<CellProps, CellState> {
+  location: string | null | undefined;
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -17,8 +19,10 @@ export class Cell extends React.Component<CellProps, CellState> {
       showLocation: props.showLocation,
       cellIndex: props.cellIndex,
     };
-
+    this.location = `${props.isTop ? "top" : "bottom"}${props.cellIndex}`;
+    this[`${this.location}`] = React.createRef();
     this.onTouch = this.onTouch.bind(this);
+    this.onLayout = this.onLayout.bind(this);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: any) {
@@ -27,17 +31,45 @@ export class Cell extends React.Component<CellProps, CellState> {
     });
   }
 
-  onTouch() {
+  onTouch(event: any) {
     const { onPress } = this.props;
     const { isTop, cellIndex } = this.state;
+    //console.log(event);
+    //onPress(isTop, cellIndex);
+  }
 
-    onPress(isTop, cellIndex);
+  onLayout(event: any) {
+    const { isTop, cellIndex } = this.state;
+    /* TravelPath.setValue(
+      isTop ? "top" : "bottom",
+      cellIndex,
+      event.nativeEvent.layout
+    ); */
+
+    const { onPress } = this.props;
+
+    //console.log(TravelPath);
+
+    this.refs[this.location].measure(
+      (
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        pageX: number,
+        pageY: number
+      ) => {
+        onPress(isTop, cellIndex, { x, y, width, height, pageX, pageY });
+      }
+    );
   }
 
   render() {
     const { index, isTop, showLocation } = this.state;
     return (
       <View
+        ref={`${this.location}`}
+        onLayout={this.onLayout}
         onTouchStart={this.onTouch}
         style={[
           styles.cell,
@@ -60,6 +92,8 @@ const topPos = [21, 25];
 const bottomPos = [1, 5];
 
 export class CellMid extends React.Component<CellMidProps, CellMidState> {
+  location: string | undefined;
+
   constructor(props: any) {
     super(props);
 
@@ -69,13 +103,44 @@ export class CellMid extends React.Component<CellMidProps, CellMidState> {
       showLocation: props.showLocation,
       cellIndex: props.cellIndex,
     };
+
+    this.location = `${props.isTop ? "top" : "bottom"}${props.cellIndex}`;
+    this[`${this.location}`] = React.createRef();
+
+    this.onTouch = this.onTouch.bind(this);
+    this.onLayout = this.onLayout.bind(this);
   }
 
   onTouch() {
     const { onPress } = this.props;
     const { isLeft, cellIndex } = this.state;
 
-    onPress(isLeft, cellIndex);
+    // onPress(isLeft, cellIndex);
+  }
+
+  onLayout(event: any) {
+    const { isLeft, cellIndex } = this.state;
+    /*  TravelPath.setValue(
+      isLeft ? "left" : "right",
+      cellIndex,
+      event.nativeEvent.layout
+    );
+     */
+    const { onPress } = this.props;
+
+    this.refs[this.location].measure(
+      (
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        pageX: number,
+        pageY: number
+      ) => {
+        onPress(isLeft, cellIndex, { x, y, width, height, pageX, pageY });
+      }
+    );
+    //console.log(TravelPath);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: any) {
@@ -87,7 +152,11 @@ export class CellMid extends React.Component<CellMidProps, CellMidState> {
   render() {
     const { showLocation } = this.state;
     return (
-      <View style={styles.cellMid}>
+      <View
+        ref={`${this.location}`}
+        onLayout={this.onLayout}
+        style={styles.cellMid}
+      >
         <Text>
           {showLocation && (
             <Icon style={styles.location} name="location-on" size={30} />
