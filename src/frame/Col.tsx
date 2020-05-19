@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Platform } from "react-native";
 import { Cell, CellMid } from "./Cell";
 import { ColMidProps, ColProps, ColState } from "./ColInterface";
+import MoveCoin from "./MoveCoin";
 
 export class Col extends React.Component<ColProps, ColState> {
   constructor(props: any) {
@@ -140,10 +141,29 @@ export class ColMid extends React.Component<ColMidProps, ColState> {
   }
 }
 
-export const ColEmpty = ({ isCenter }: any) => {
-  return (
-    <View style={[isCenter == "true" ? styles.colMid : styles.colEmpty]} />
-  );
+export const ColEmpty = ({ isCenter, onUpdate }: any) => {
+  const onLayout = (event: any) => {
+    setTimeout(()=>{
+      if(event != null)
+      event.measure(
+        (
+          x: number,
+          y: number,
+          width: number,
+          height: number,
+          pageX: number,
+          pageY: number
+        ) => {
+          console.log("x, y", width, height, pageX, pageY)
+          onUpdate("home", 0, { x, y, width, height, pageX, pageY });
+        }
+      );
+    }, 50);
+  };
+
+  if (isCenter != "true") return <View style={styles.colEmpty} />;
+
+  return <View ref={onLayout} style={styles.colMid} />;
 };
 
 const allCells: any = () => {

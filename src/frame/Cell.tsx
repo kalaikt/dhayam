@@ -156,13 +156,7 @@ export class CellMid extends React.Component<CellMidProps, CellMidState> {
         ref={`${this.location}`}
         onLayout={this.onLayout}
         style={styles.cellMid}
-      >
-        <Text>
-          {showLocation && (
-            <Icon style={styles.location} name="location-on" size={30} />
-          )}
-        </Text>
-      </View>
+      />
     );
   }
 }
@@ -186,10 +180,5 @@ const styles = StyleSheet.create({
   },
   show: {
     borderWidth: 1,
-  },
-  location: {
-    position: "absolute",
-    top: -10,
-    left: -2,
   },
 });
