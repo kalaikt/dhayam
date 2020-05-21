@@ -7,28 +7,47 @@ import {
   Dimensions,
 } from "react-native";
 import { Row, RowMid } from "./frame/Row";
-import { getPaths } from "./frame/TravelPath";
+import { getPaths, PlayersHome } from "./frame/TravelPath";
 import MoveCoin from "./frame/MoveCoin";
-import {PLAYER_1} from "./constants/TravelRoot"
+import { PLAYER_1 } from "./constants/TravelRoot";
 
-let travelPath = getPaths();
 const screen = Dimensions.get("window");
 
 const DrawDhayam = () => {
   const [randomNo, setState] = useState(1);
+  const [travelPath, updatePath] = useState(getPaths);
+  const [playersHome, updateHome] = useState(PlayersHome);
 
   const randNum = () => {
     const no = Math.floor(Math.random() * 6) + 1;
     setState(no);
   };
 
-  const loadCoin = ()=> {
-    return PLAYER_1.map((value, index)=><MoveCoin coin={index} key={`player${index}`} travelPath={travelPath} />);
-  }
+  const loadCoin = () => {
+    const players = [{ path: travelPath, home: playersHome.bottomLeftHome }];
 
-  const [travelPath, updatePath] = useState(getPaths);
+    console.log();
+
+    return players.map((player) => {
+      return player.home.map((h, index) => {
+        return (
+          <MoveCoin
+            coin={index}
+            key={`player${index}`}
+            travelPath={player.path}
+            layout={h.layout}
+          />
+        );
+      });
+    });
+  };
 
   const onUpdatePath = (location: string, i: number, layout: any) => {
+    if (location.includes("Home")) {
+      playersHome[location][i] = { layout };
+      return;
+    }
+
     travelPath.forEach((p: any) => {
       if (p.location == location && p.position == i) p.layout = layout;
     });
@@ -58,6 +77,9 @@ const styles = StyleSheet.create({
     height: screen.width < 1024 ? screen.width : 1024,
     paddingLeft: 5,
     paddingRight: 5,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   playerSection: {
     width: "100%",

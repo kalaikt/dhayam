@@ -1,19 +1,21 @@
 import React from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
-import { Col, ColMid, ColEmpty } from "./Col";
+import { Col, ColMid, ColEmpty, StartingCells } from "./Col";
 
-const {width, height} = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export const Row = ({ isTop, diceValue, onUpdatePath }: any) => {
   const onUpdate = (location: string, i: number, layout: any) => {
     onUpdatePath(location, i, layout);
   };
 
+  const position = isTop ? "top" : "bottom";
+
   return (
     <View style={styles.row}>
-      <ColEmpty isCenter="flase" />
-      <Col onUpdate={onUpdate} diceValue={diceValue} isTop={isTop} cells={25} />
-      <ColEmpty isCenter="false" />
+      <StartingCells position={`${position}Left`} onUpdate={onUpdate} />
+      <Col onUpdate={onUpdate} diceValue={diceValue} position={position} cells={25} />
+      <StartingCells position={`${position}Right`} onUpdate={onUpdate} />
     </View>
   );
 };
@@ -47,6 +49,8 @@ const styles = StyleSheet.create({
   },
   rowMid: {
     borderWidth: 0,
+    paddingLeft: 25,
+    paddingRight: 25,
     borderColor: "#f00",
     borderStyle: "solid",
     height: "20%",

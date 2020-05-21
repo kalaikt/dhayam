@@ -1,6 +1,6 @@
 export interface CellProps {
   index: number;
-  isTop: boolean;
+  position: string;
   showLocation: boolean;
   cellIndex: number;
   onPress: Function;
@@ -8,7 +8,7 @@ export interface CellProps {
 
 export interface CellState {
   index: number;
-  isTop: boolean;
+  position: string;
   showLocation: boolean;
   cellIndex: number;
 }

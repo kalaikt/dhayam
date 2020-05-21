@@ -1,6 +1,6 @@
 export interface ColProps {
   diceValue: number;
-  isTop: boolean;
+  position: string;
   cells: number;
   onUpdate: Function;
 }

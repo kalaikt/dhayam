@@ -7,14 +7,46 @@ const setValue = (location: string, index: number, positions: any) => {
   //console.log(TravelPath);
 };
 
- export const getPaths = () => {
+const coins = [
+  {
+    layout: {},
+    position: 0,
+  },
+  {
+    layout: {},
+    position: 1,
+  },
+  {
+    layout: {},
+    position: 2,
+  },
+  {
+    layout: {},
+    position: 3,
+  },
+  {
+    layout: {},
+    position: 4,
+  },
+];
+
+export const PlayersHome = {
+  topLeftHome: [],
+  topRightHome: [],
+  bottomLeftHome: [],
+  bottomRightHome: [],
+};
+
+export const getPaths = () => {
   return [
-    { location: "home", position: 0, layout: {} },
-    { location: "bottom", position: 2, layout: {} },
-    { location: "bottom", position: 7, layout: {} },
-    { location: "bottom", position: 12, layout: {} },
-    { location: "bottom", position: 17, layout: {} },
-    { location: "bottom", position: 22, layout: {} },
+    {
+      location: "begin",
+    },
+    { location: "bottomLeft", position: 0, layout: {} },
+    { location: "bottomLeft", position: 1, layout: {} },
+    { location: "bottomLeft", position: 2, layout: {} },
+    { location: "bottomLeft", position: 3, layout: {} },
+    { location: "bottom", position: 20, layout: {} },
     { location: "bottom", position: 21, layout: {} },
     { location: "bottom", position: 16, layout: {} },
     { location: "bottom", position: 11, layout: {} },
