@@ -3,7 +3,6 @@ export interface CellProps {
   position: string;
   showLocation: boolean;
   cellIndex: number;
-  onPress: Function;
 }
 
 export interface CellState {

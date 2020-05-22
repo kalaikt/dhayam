@@ -1,15 +1,8 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
-import { Row, RowMid } from "./frame/Row";
+import { StyleSheet, View, Dimensions } from "react-native";
+import { Row, RowMid } from "./frame/rows";
 import { getPaths, PlayersHome } from "./frame/TravelPath";
 import MoveCoin from "./frame/MoveCoin";
-import { PLAYER_1 } from "./constants/TravelRoot";
 
 const screen = Dimensions.get("window");
 
@@ -58,13 +51,9 @@ const DrawDhayam = () => {
       {loadCoin()}
       <View style={styles.playerSection}></View>
       <View style={styles.container}>
-        <Row onUpdatePath={onUpdatePath} isTop="true" diceValue={randomNo} />
-        <RowMid
-          travelPath={travelPath}
-          onUpdatePath={onUpdatePath}
-          diceValue={randomNo}
-        />
-        <Row onUpdatePath={onUpdatePath} diceValue={randomNo} />
+        <Row position="top" />
+        <RowMid />
+        <Row position="bottom" />
       </View>
       <View style={styles.playerSection}></View>
     </View>

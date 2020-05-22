@@ -1,19 +1,15 @@
 export interface ColProps {
-  diceValue: number;
   position: string;
-  cells: number;
   onUpdate: Function;
 }
 
 export interface ColMidProps {
-  diceValue: number;
   isLeft: boolean;
   onUpdate: Function;
 }
 
 export interface ColState {
   cellList: Boxs;
-  diceValue: number;
   prevValue: number;
 }
 
