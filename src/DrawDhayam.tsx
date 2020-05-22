@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { Row, RowMid } from "./frame/rows";
-import { getPaths, PlayersHome } from "./frame/TravelPath";
+import { getPlayer1Paths, PlayersHome } from "./constants/TravelPath";
 import MoveCoin from "./frame/MoveCoin";
 
 const screen = Dimensions.get("window");
 
 const DrawDhayam = () => {
   const [randomNo, setState] = useState(1);
-  const [travelPath, updatePath] = useState(getPaths);
+  const [travelPath, updatePath] = useState(getPlayer1Paths);
   const [playersHome, updateHome] = useState(PlayersHome);
 
   const randNum = () => {
@@ -18,8 +18,6 @@ const DrawDhayam = () => {
 
   const loadCoin = () => {
     const players = [{ path: travelPath, home: playersHome.bottomLeftHome }];
-
-    console.log();
 
     return players.map((player) => {
       return player.home.map((h, index) => {

@@ -1,7 +1,8 @@
 import React from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
-import { Column, PlayerHome } from "../columns";
+import { Column } from "../columns";
 import PropTypes from "prop-types";
+import PlayerHome from "../columns/PlayerHome";
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     height: "33%",
     flexDirection: "row",
+    width: "100%",
     maxWidth: width > 1024 ? height * 0.55 : height,
   },
   rowMid: {
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     height: "20%",
     flexDirection: "row",
+    width: "100%",
     maxWidth: width > 1024 ? height * 0.55 : height,
   },
 });

@@ -6,9 +6,9 @@ const { width, height } = Dimensions.get("window");
 export const RowMid = () => {
   return (
     <View style={styles.rowMid}>
-      <Column position="left"/>
-      <Column type="empty" />
-      <Column position="right"/>
+      <Column position="left" />
+      <Column type="empty" position="home" />
+      <Column position="right" />
     </View>
   );
 };
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     height: "20%",
     flexDirection: "row",
+    width: "100%",
     maxWidth: width > 1024 ? height * 0.55 : height,
   },
 });

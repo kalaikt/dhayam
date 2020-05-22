@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Cell } from "../Cell";
+import Cell from "../../containers/cells.container";
 import PropTypes from "prop-types";
 import { getAllCells } from "../../constants";
 

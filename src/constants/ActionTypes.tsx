@@ -1,0 +1,3 @@
+export const UPDATE_LAYOUT = 'UPDATE_LAYOUT';
+export const UPDATE_HOME_LAYOUT = 'UPDATE_HOME_LAYOUT';
+export const GET_PLAYERS = 'GET_PLAYERS';

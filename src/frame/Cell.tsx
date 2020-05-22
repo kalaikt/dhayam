@@ -2,8 +2,24 @@ import React from "react";
 import { StyleSheet, View, Dimensions, Text } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-export const Cell = ({ position, index }: any) => {
-  const updateLayout = (event: any) => {};
+export const Cell = ({ position, index, actions }: any) => {
+  const updateLayout = (event: any) => {
+    if (event == null) return;
+
+    event.measure(
+      (
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        pageX: number,
+        pageY: number
+      ) => {
+        //onUpdate("home", 0, { x, y, width, height, pageX, pageY });
+        actions.updateLayout(position, index, { x, y, width, height, pageX, pageY })
+      }
+    );
+  };
 
   const colIngore = ["top", "bottom"];
   const style =

@@ -1,13 +1,19 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-
+import { StyleSheet, View } from "react-native";
 import DrawDhayam from "./src/DrawDhayam";
-import MoveCoin from "./src/frame/MoveCoin"
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import reducer from "./src/reducers";
+
+const store = createStore(reducer);
+
 export default function App() {
   return (
-    <View style={styles.container}>
-      <DrawDhayam />
-    </View>
+    <Provider store={store}>
+      <View style={styles.container}>
+        <DrawDhayam />
+      </View>
+    </Provider>
   );
 }
 

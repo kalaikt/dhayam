@@ -3,8 +3,6 @@ const setValue = (location: string, index: number, positions: any) => {
     if (path.location === location && path.position === index)
       return { ...path, layout: positions };
   });
-
-  //console.log(TravelPath);
 };
 
 const coins = [
@@ -37,7 +35,7 @@ export const PlayersHome = {
   bottomRightHome: [],
 };
 
-export const getPaths = () => {
+export const getPlayer1Paths = () => {
   return [
     {
       location: "begin",
@@ -104,5 +102,10 @@ export const getPaths = () => {
 };
 
 export const TravelPath = {
-  playars: [getPaths()],
+  playars: [
+    { path: getPlayer1Paths(), home: PlayersHome.bottomLeftHome },
+   /*  { path: getPlayer1Paths(), home: PlayersHome.topLeftHome },
+    { path: getPlayer1Paths(), home: PlayersHome.topRightHome },
+    { path: getPlayer1Paths(), home: PlayersHome.bottomRightHome }, */
+  ],
 };
