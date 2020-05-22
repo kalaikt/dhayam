@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import DrawDhayam from "./src/DrawDhayam";
+import DrawDhayam from "./src/views/DrawDhayam";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./src/reducers";

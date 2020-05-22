@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import Cell from "../../containers/cells.container";
+import Cell from "../../../containers/cells.container";
 import PropTypes from "prop-types";
-import { getAllCells } from "../../constants";
+import { getAllCells } from "../../../constants";
 
 export const Column = ({ position, type }: any) => {
   const loadCell = () => {

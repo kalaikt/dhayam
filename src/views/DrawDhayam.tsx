@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { Row, RowMid } from "./frame/rows";
-import { getPlayer1Paths, PlayersHome } from "./constants/TravelPath";
+import { getPlayer1Paths, PlayersHome } from "../constants/TravelPath";
 import MoveCoin from "./frame/MoveCoin";
 
 const screen = Dimensions.get("window");

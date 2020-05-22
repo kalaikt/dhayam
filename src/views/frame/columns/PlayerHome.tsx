@@ -1,11 +1,11 @@
 import React from "react";
-import Cell from "../../containers/cells.container";
+import Cell from "../../../containers/cells.container";
 import { View, StyleSheet } from "react-native";
-import { getAllCells } from "../../constants";
+import { getAllCells } from "../../../constants";
 import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import * as CellActions from "../../actions";
+import * as CellActions from "../../../actions";
 
 const PlayerHome = ({ position, actions }: any) => {
   const loadCells = () => {
