@@ -1,32 +1,35 @@
 import {
-  UPDATE_LAYOUT,
-  UPDATE_HOME_LAYOUT,
-  GET_PLAYERS,
+  UPDATE_CELL_LAYOUT,
+  UPDATE_HOME_CELL_LAYOUT,
+  GET_CELLS,
 } from "../constants/ActionTypes";
-import { getPlayer1Paths } from "../constants";
-import { PlayersHome } from "../constants";
+import { PlayersHome, getPlayer1Paths } from "../constants";
 
-const initialState = { cellsLayout: [], home: PlayersHome };
+const initialState = {
+  cellsLayout: [],
+  home: PlayersHome,
+  path: { player1: getPlayer1Paths() },
+};
 
-const updateLayout = (state: any, action: any) => {
+const updateCellLayout = (state: any, action: any) => {
   state.cellsLayout = [...state.cellsLayout, action];
   return state;
 };
 
-const updateHomeLayout = (state: any, action: any) => {
+const updateHomeCellLayout = (state: any, action: any) => {
   state.home[action.location][action.index] = { layout: action.layout };
   return state;
 };
 
 export default function cellsReducer(state = initialState, action: any) {
   switch (action.type) {
-    case UPDATE_LAYOUT:
-      return updateLayout(state, action);
+    case UPDATE_CELL_LAYOUT:
+      return updateCellLayout(state, action);
 
-    case UPDATE_HOME_LAYOUT:
-      return updateHomeLayout(state, action);
+    case UPDATE_HOME_CELL_LAYOUT:
+      return updateHomeCellLayout(state, action);
 
-    case GET_PLAYERS:
+    case GET_CELLS:
       return state;
 
     default:

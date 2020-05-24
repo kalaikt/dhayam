@@ -1,11 +1,12 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import DrawDhayam from "./src/views/DrawDhayam";
-import { createStore } from "redux";
+import DrawDhayam from "./src/containers/DrawDhayam.containers";
+import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./src/reducers";
+import thunk from 'redux-thunk';
 
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(thunk));
 
 export default function App() {
   return (

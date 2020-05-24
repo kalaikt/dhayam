@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
-import { Column } from "../columns";
+import Column  from "../columns/Column";
 const { width, height } = Dimensions.get("window");
 
 export const RowMid = () => {

@@ -1,62 +1,69 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { Row, RowMid } from "./frame/rows";
-import { getPlayer1Paths, PlayersHome } from "../constants/TravelPath";
 import MoveCoin from "./frame/MoveCoin";
 
 const screen = Dimensions.get("window");
 
-const DrawDhayam = () => {
-  const [randomNo, setState] = useState(1);
-  const [travelPath, updatePath] = useState(getPlayer1Paths);
-  const [playersHome, updateHome] = useState(PlayersHome);
-
-  const randNum = () => {
-    const no = Math.floor(Math.random() * 6) + 1;
-    setState(no);
-  };
-
-  const loadCoin = () => {
-    const players = [{ path: travelPath, home: playersHome.bottomLeftHome }];
-
-    return players.map((player) => {
-      return player.home.map((h, index) => {
-        return (
-          <MoveCoin
-            coin={index}
-            key={`player${index}`}
-            travelPath={player.path}
-            layout={h.layout}
-          />
-        );
-      });
-    });
-  };
-
-  const onUpdatePath = (location: string, i: number, layout: any) => {
-    if (location.includes("Home")) {
-      playersHome[location][i] = { layout };
-      return;
-    }
-
-    travelPath.forEach((p: any) => {
-      if (p.location == location && p.position == i) p.layout = layout;
-    });
-  };
-
-  return (
-    <View style={styles.mainContainer}>
-      {loadCoin()}
-      <View style={styles.playerSection}></View>
-      <View style={styles.container}>
-        <Row position="top" />
-        <RowMid />
-        <Row position="bottom" />
-      </View>
-      <View style={styles.playerSection}></View>
-    </View>
-  );
+type props = {
+  player1: any;
+  player2: any;
+  player3: any;
+  player4: any;
+  travelPath: any;
+  actions: any;
 };
+
+type states = {
+  player1: any;
+  travelPath: any;
+};
+
+class DrawDhayam extends React.Component<props, states> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      player1: props.player1,
+      travelPath: props.travelPath,
+    };
+
+    this.loadCoin = this.loadCoin.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      player1: this.props.player1,
+      travelPath: this.props.travelPath,
+    });
+  }
+
+  loadCoin = () => {
+    return this.state.player1.map((h: any, index: number) => (
+      <MoveCoin
+        coin={index}
+        key={`player${index}`}
+        layout={h.layout}
+        travelPath={this.state.travelPath}
+      />
+    ));
+  };
+
+  render() {
+    return (
+      <View style={styles.mainContainer}>
+        {this.loadCoin()}
+        <View style={styles.playerSection}></View>
+        <View style={styles.container}>
+          <Row position="top" />
+          <RowMid />
+          <Row position="bottom" />
+        </View>
+        <View style={styles.playerSection}></View>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {

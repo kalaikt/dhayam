@@ -1,10 +1,13 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import Cell from "../../../containers/cells.container";
+import Cell from "../../../containers/Cells.container";
 import PropTypes from "prop-types";
 import { getAllCells } from "../../../constants";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as CellActions from "../../../actions";
 
-export const Column = ({ position, type }: any) => {
+const Column = ({ position, type, actions }: any) => {
   const loadCell = () => {
     const cells = getAllCells()[position];
     return cells.map((cell: any) => (
@@ -19,24 +22,12 @@ export const Column = ({ position, type }: any) => {
   const onLayout = (event: any) => {
     if (event == null) return;
 
-    event.measure(
-      (
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-        pageX: number,
-        pageY: number
-      ) => {
-        //onUpdate("home", 0, { x, y, width, height, pageX, pageY });
-      }
-    );
+    actions.updateCellLayout("home", 0, event);
   };
 
   switch (type) {
     case "empty":
       return <View ref={onLayout} style={styles.colMid} />;
-      break;
 
     default:
       return <View style={styles.col}>{loadCell()}</View>;
@@ -77,3 +68,11 @@ const styles = StyleSheet.create({
     flex: 0.58,
   },
 });
+
+const mapStateToProps = (state: any) => ({});
+
+const mapDispatchToProps = (dispatch: any) => ({
+  actions: bindActionCreators(CellActions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Column);

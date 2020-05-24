@@ -1,70 +1,50 @@
 import React from "react";
-import Cell from "../../../containers/cells.container";
+import Cell from "../../../containers/Cells.container";
 import { View, StyleSheet } from "react-native";
 import { getAllCells } from "../../../constants";
-import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as CellActions from "../../../actions";
 
-const PlayerHome = ({ position, actions }: any) => {
-  const loadCells = () => {
-    const cells = getAllCells()[position];
-    return cells.map((cell: any) => (
-      <Cell
-        key={position + cell.cellIndex}
-        index={cell.cellIndex}
-        position={position}
-      />
-    ));
-  };
+type props = {
+  position: string;
+  actions: any;
+};
 
-  const buildColumn = () => {
-    switch (position) {
+class PlayerHome extends React.Component<props> {
+  constructor(props: props) {
+    super(props);
+
+    this.buildColumn = this.buildColumn.bind(this);
+    this.buildCoin = this.buildCoin.bind(this);
+    this.topLeft = this.topLeft.bind(this);
+    this.topRight = this.topRight.bind(this);
+    this.bottomLeft = this.bottomLeft.bind(this);
+    this.bottomRight = this.bottomRight.bind(this);
+    this.buildCoin = this.buildCoin.bind(this);
+  }
+
+  buildColumn = () => {
+    switch (this.props.position) {
       case "topLeft":
-        return topLeft();
-        break;
+        return this.topLeft();
       case "topRight":
-        return topRight();
-        break;
+        return this.topRight();
       case "bottomLeft":
-        return bottomLeft();
-        break;
+        return this.bottomLeft();
       case "bottomRight":
-        return bottomRight();
-        break;
+        return this.bottomRight();
       default:
-        return topLeft();
+        return this.topLeft();
     }
   };
 
-  const buildCoin = () => {
-    const pos = `${position}Home`;
+  buildCoin = () => {
+    const pos = `${this.props.position}Home`;
     let ind = 0;
     const onLayout = (event: any) => {
       if (event == null) return;
-
-      setTimeout(() => {
-        event.measure(
-          (
-            x: number,
-            y: number,
-            width: number,
-            height: number,
-            pageX: number,
-            pageY: number
-          ) => {
-            actions.updateHomeLayout(pos, ind++, {
-                x,
-                y,
-                width,
-                height,
-                pageX,
-                pageY,
-              });
-          }
-        );
-      }, 100);
+      this.props.actions.updateHomeCellLayout(pos, ind++, event);
     };
 
     return (
@@ -84,45 +64,55 @@ const PlayerHome = ({ position, actions }: any) => {
     );
   };
 
-  const topLeft = () => {
+  topLeft = () => {
     return (
       <View style={styles.topLeft}>
-        <View style={styles.topLeftCell}>{loadCells()}</View>
-        <View style={styles.topLeftHome}>{buildCoin()}</View>
+        <View style={styles.topLeftCell}>{this.loadCells()}</View>
+        <View style={styles.topLeftHome}>{this.buildCoin()}</View>
       </View>
     );
   };
-  const topRight = () => {
+  topRight = () => {
     return (
       <View style={styles.topRight}>
-        {loadCells()}
-        <View style={styles.topRightHome}>{buildCoin()}</View>
+        {this.loadCells()}
+        <View style={styles.topRightHome}>{this.buildCoin()}</View>
       </View>
     );
   };
-  const bottomLeft = () => {
+  bottomLeft = () => {
     return (
       <View style={styles.bottomLeft}>
-        <View style={styles.bottomLeftHome}>{buildCoin()}</View>
-        {loadCells()}
+        <View style={styles.bottomLeftHome}>{this.buildCoin()}</View>
+        {this.loadCells()}
       </View>
     );
   };
-  const bottomRight = () => {
+  bottomRight = () => {
     return (
       <View style={styles.bottomRight}>
-        <View style={styles.bottomRightHome}>{buildCoin()}</View>
-        <View style={styles.bottomRightCell}>{loadCells()}</View>
+        <View style={styles.bottomRightHome}>{this.buildCoin()}</View>
+        <View style={styles.bottomRightCell}>{this.loadCells()}</View>
       </View>
     );
   };
 
-  return buildColumn();
-};
+  loadCells = () => {
+    const { position } = this.props;
+    const cells = getAllCells()[position];
+    return cells.map((cell: any) => (
+      <Cell
+        key={position + cell.cellIndex}
+        index={cell.cellIndex}
+        position={position}
+      />
+    ));
+  };
 
-PlayerHome.prototype = {
-  position: PropTypes.string,
-};
+  render() {
+    return this.buildColumn();
+  }
+}
 
 const mapStateToProps = (state: any) => ({});
 

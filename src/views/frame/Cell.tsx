@@ -1,63 +1,71 @@
 import React from "react";
-import { StyleSheet, View, Dimensions, Text } from "react-native";
+import { StyleSheet, View, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-export const Cell = ({ position, index, actions }: any) => {
-  const updateLayout = (event: any) => {
+type props = {
+  position: string;
+  index: number;
+  actions: any;
+};
+
+type states = {
+  cell: any;
+};
+
+class Cell extends React.Component<props, states> {
+  cell: any = React.createRef();
+  constructor(props: props) {
+    super(props);
+
+    this.cellHandler = this.cellHandler.bind(this);
+  }
+
+  cellHandler = (event: any) => {
     if (event == null) return;
 
-    event.measure(
-      (
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-        pageX: number,
-        pageY: number
-      ) => {
-        //onUpdate("home", 0, { x, y, width, height, pageX, pageY });
-        actions.updateLayout(position, index, { x, y, width, height, pageX, pageY })
-      }
-    );
+    const { position, index, actions } = this.props;
+    actions.updateCellLayout(position, index, event);
   };
 
-  const colIngore = ["top", "bottom"];
-  const style =
-    (position == "topLeft" || position == "bottomRight") && styles.w100;
+  render() {
+    const { position, index } = this.props;
+    const colIngore = ["top", "bottom"];
+    const style =
+      (position == "topLeft" || position == "bottomRight") && styles.w100;
 
-  switch (position) {
-    case "left":
-    case "right":
-      return (
-        <View ref={updateLayout} style={styles.cellMid}>
-          {addStar(position, index)}
-        </View>
-      );
-      break;
+    switch (position) {
+      case "left":
+      case "right":
+        return (
+          <View ref={this.cellHandler} style={styles.cellMid}>
+            {addStar(position, index)}
+          </View>
+        );
 
-    default:
-      return (
-        <View
-          ref={updateLayout}
-          style={[
-            styles.cell,
-            (index % 5 >= 1 && index % 5 <= 3) ||
-            (position == "top" && topPos.indexOf(index + 1) != -1) ||
-            (position != "top" && bottomPos.indexOf(index + 1) != -1)
-              ? styles.show
-              : styles.hide,
-            !colIngore.includes(position) && styles.startingCell,
-            style,
-            ((position == "top" && topPos.indexOf(index + 1) != -1) ||
-              (position != "top" && bottomPos.indexOf(index + 1) != -1)) &&
-              styles.shadow,
-          ]}
-        >
-          {addStar(position, index)}
-        </View>
-      );
+      default:
+        return (
+          <View
+            ref={this.cellHandler}
+            style={[
+              styles.cell,
+              (index % 5 >= 1 && index % 5 <= 3) ||
+              (position == "top" && topPos.indexOf(index + 1) != -1) ||
+              (position != "top" && bottomPos.indexOf(index + 1) != -1)
+                ? styles.show
+                : styles.hide,
+              !colIngore.includes(position) && styles.startingCell,
+              style,
+              ((position == "top" && topPos.indexOf(index + 1) != -1) ||
+                (position != "top" && bottomPos.indexOf(index + 1) != -1)) &&
+                styles.shadow,
+            ]}
+          >
+            {addStar(position, index)}
+          </View>
+        );
+    }
   }
-};
+}
 
 const topPos = [5, 21, 25];
 const bottomPos = [1, 5, 21];
@@ -119,3 +127,5 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
+
+export default Cell;

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
-import { Column } from "../columns";
+import Column  from "../columns/Column";
 import PropTypes from "prop-types";
 import PlayerHome from "../columns/PlayerHome";
 
