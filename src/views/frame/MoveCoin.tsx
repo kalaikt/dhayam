@@ -18,6 +18,7 @@ interface props {
   layout: any;
   cellsLayout: any;
   travelPath: any;
+  color: string;
 }
 
 class MoveCoin extends React.Component<props, states> {
@@ -70,9 +71,8 @@ class MoveCoin extends React.Component<props, states> {
       return;
     }
 
-    ++this.travelIndex;
     this.getLayout(this.travelIndex);
-
+    this.travelIndex++;
     setTimeout(() => {
       Animated.timing(this.state.pan, {
         delay: 300,
@@ -89,7 +89,7 @@ class MoveCoin extends React.Component<props, states> {
     //const randam = 1;
     console.log(randam);
     if (this.travelIndex == 0 && randam != 1) return;
-    if (this.travelIndex + randam < this.props.travelPath.length)
+    if (this.travelIndex + randam <= this.props.travelPath.length)
       this.move(randam);
   }
 
@@ -127,6 +127,7 @@ class MoveCoin extends React.Component<props, states> {
             name="location-on"
             size={size}
             onPress={this.moveCoin}
+            color={this.props.color}
           />
         )}
       </Animated.View>
@@ -138,13 +139,12 @@ const styles = StyleSheet.create({
   icon: {
     width: "25%",
     height: 40,
-    color: "red",
   },
   coin: {
     width: "25%",
     height: 40,
     position: "absolute",
-    zIndex: 100,
+    zIndex: 200,
   },
 });
 

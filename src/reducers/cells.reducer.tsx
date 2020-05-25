@@ -3,12 +3,23 @@ import {
   UPDATE_HOME_CELL_LAYOUT,
   GET_CELLS,
 } from "../constants/ActionTypes";
-import { PlayersHome, getPlayer1Paths } from "../constants";
+import {
+  PlayersHome,
+  getPlayer1Paths,
+  getPlayer2Paths,
+  getPlayer3Paths,
+  getPlayer4Paths,
+} from "../constants";
 
 const initialState = {
   cellsLayout: [],
   home: PlayersHome,
-  path: { player1: getPlayer1Paths() },
+  path: {
+    player1: getPlayer1Paths(),
+    player2: getPlayer2Paths(),
+    player3: getPlayer3Paths(),
+    player4: getPlayer4Paths(),
+  },
 };
 
 const updateCellLayout = (state: any, action: any) => {

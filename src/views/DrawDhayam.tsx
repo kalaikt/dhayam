@@ -16,6 +16,9 @@ type props = {
 
 type states = {
   player1: any;
+  player2: any;
+  player3: any;
+  player4: any;
   travelPath: any;
 };
 
@@ -25,6 +28,9 @@ class DrawDhayam extends React.Component<props, states> {
 
     this.state = {
       player1: props.player1,
+      player2: props.player2,
+      player3: props.player3,
+      player4: props.player4,
       travelPath: props.travelPath,
     };
 
@@ -38,13 +44,14 @@ class DrawDhayam extends React.Component<props, states> {
     });
   }
 
-  loadCoin = () => {
-    return this.state.player1.map((h: any, index: number) => (
+  loadCoin = (player: any) => {
+    return player.coins.map((h: any, index: number) => (
       <MoveCoin
         coin={index}
         key={`player${index}`}
         layout={h.layout}
-        travelPath={this.state.travelPath}
+        travelPath={player.travelPath}
+        color={player.color}
       />
     ));
   };
@@ -52,7 +59,10 @@ class DrawDhayam extends React.Component<props, states> {
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.loadCoin()}
+        {this.loadCoin(this.state.player1)}
+        {this.loadCoin(this.state.player2)}
+        {this.loadCoin(this.state.player3)}
+        {this.loadCoin(this.state.player4)}
         <View style={styles.playerSection}></View>
         <View style={styles.container}>
           <Row position="top" />

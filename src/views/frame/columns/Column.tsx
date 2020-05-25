@@ -19,15 +19,41 @@ const Column = ({ position, type, actions }: any) => {
     ));
   };
 
-  const onLayout = (event: any) => {
+  const onLayout = (event: any, home: string) => {
     if (event == null) return;
 
-    actions.updateCellLayout("home", 0, event);
+    actions.updateCellLayout(home, 0, event);
   };
 
   switch (type) {
     case "empty":
-      return <View ref={onLayout} style={styles.colMid} />;
+      return (
+        <View style={styles.colMid}>
+          <View style={styles.home}>
+            <View
+              ref={(ref) => onLayout(ref, "playerHome3")}
+              style={[styles.playerHome, {marginTop: 20}]}
+            />
+          </View>
+          <View style={[styles.home, styles.row]}>
+            <View
+              ref={(ref) => onLayout(ref, "playerHome2")}
+              style={styles.playerHome}
+            />
+            <View style={styles.playerHome} />
+            <View
+              ref={(ref) => onLayout(ref, "playerHome4")}
+              style={styles.playerHome}
+            />
+          </View>
+          <View style={styles.home}>
+            <View
+              ref={(ref) => onLayout(ref, "playerHome1")}
+              style={styles.playerHome}
+            />
+          </View>
+        </View>
+      );
 
     default:
       return <View style={styles.col}>{loadCell()}</View>;
@@ -66,6 +92,18 @@ const styles = StyleSheet.create({
     borderColor: "#f00",
     borderStyle: "solid",
     flex: 0.58,
+  },
+  home: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  playerHome: {
+    width: "33.33%",
+    height: "100%",
+  },
+  row: {
+    flexDirection: "row",
   },
 });
 

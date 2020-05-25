@@ -2,9 +2,24 @@ import { createSelector } from "reselect";
 
 const getCellsRespose = (state: any) => state.cells.cellsLayout;
 const getHomeRespose = (state: any) => state.cells.home;
-const getPath = (state: any) => state.cells.path.player1;
+const getPlayer1Path = (state: any) => state.cells.path.player1;
+const getPlayer2Path = (state: any) => state.cells.path.player2;
+const getPlayer3Path = (state: any) => state.cells.path.player3;
+const getPlayer4Path = (state: any) => state.cells.path.player4;
 
-export const getPlayer1TravelPath = createSelector(getPath, (paths) => {
+export const getPlayer1TravelPath = createSelector(getPlayer1Path, (paths) => {
+  return paths;
+});
+
+export const getPlayer2TravelPath = createSelector(getPlayer2Path, (paths) => {
+  return paths;
+});
+
+export const getPlayer3TravelPath = createSelector(getPlayer3Path, (paths) => {
+  return paths;
+});
+
+export const getPlayer4TravelPath = createSelector(getPlayer4Path, (paths) => {
   return paths;
 });
 

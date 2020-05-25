@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View, Dimensions , Text} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 type props = {
