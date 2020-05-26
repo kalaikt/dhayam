@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { Row, RowMid } from "./frame/rows";
 import MoveCoin from "./frame/MoveCoin";
+import Player from "./Player";
 
 const screen = Dimensions.get("window");
 
@@ -63,33 +64,41 @@ class DrawDhayam extends React.Component<props, states> {
         {this.loadCoin(this.state.player2)}
         {this.loadCoin(this.state.player3)}
         {this.loadCoin(this.state.player4)}
-        <View style={styles.playerSection}></View>
+        <View style={styles.playerSection}>
+          <Player name={"Kalai"} />
+          <Player name={"Charu"} align={"right"} />
+        </View>
         <View style={styles.container}>
           <Row position="top" />
           <RowMid />
           <Row position="bottom" />
         </View>
-        <View style={styles.playerSection}></View>
+        <View style={styles.playerSection}>
+          <Player name={"Padma"} />
+          <Player name={"Chatresh"} align={"right"} />
+        </View>
       </View>
     );
   }
 }
-
+const userSize = (100 - (screen.width / screen.height) * 100) / 2;
 const styles = StyleSheet.create({
   container: {
     width: screen.width < 1024 ? screen.width : 1024,
     height: screen.width < 1024 ? screen.width : 1024,
     paddingLeft: 5,
     paddingRight: 5,
-    borderWidth: 1,
+    borderWidth: 0,
     alignItems: "center",
     justifyContent: "center",
   },
   playerSection: {
+    flexDirection: "row",
     width: "100%",
-    height: "20%",
+    height: `${userSize - 1}%`,
   },
   mainContainer: {
+    marginTop: 50,
     width: "100%",
     height: "100%",
   },
