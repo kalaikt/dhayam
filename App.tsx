@@ -4,26 +4,22 @@ import DrawDhayam from "./src/containers/DrawDhayam.containers";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./src/reducers";
-import thunk from 'redux-thunk';
+import thunk from "redux-thunk";
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Home from "./src/views/Home";
 
 const store = createStore(reducer, applyMiddleware(thunk));
-
+const Stack = createStackNavigator();
 export default function App() {
   return (
     <Provider store={store}>
-      <View style={styles.container}>
-        <DrawDhayam />
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator  mode="modal" headerMode="none">
+          <Stack.Screen name="Home" component={Home} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

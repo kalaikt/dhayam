@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: "#f00",
     borderStyle: "solid",
-    height: "39%",
+    height: "37%",
     flexDirection: "row",
     width: "100%",
     maxWidth: width > 1024 ? height * 0.55 : height,
