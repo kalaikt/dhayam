@@ -29,20 +29,9 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: "#f00",
     borderStyle: "solid",
-    height: "33%",
+    height: "39%",
     flexDirection: "row",
     width: "100%",
     maxWidth: width > 1024 ? height * 0.55 : height,
-  },
-  rowMid: {
-    borderWidth: 0,
-    paddingLeft: 25,
-    paddingRight: 25,
-    borderColor: "#f00",
-    borderStyle: "solid",
-    height: "20%",
-    flexDirection: "row",
-    width: "100%",
-    maxWidth: width > 1024 ? height * 0.55 : height,
-  },
+  }
 });

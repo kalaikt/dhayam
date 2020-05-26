@@ -16,11 +16,9 @@ export const RowMid = () => {
 const styles = StyleSheet.create({
   rowMid: {
     borderWidth: 0,
-    paddingLeft: 25,
-    paddingRight: 25,
     borderColor: "#f00",
     borderStyle: "solid",
-    height: "20%",
+    height: "23%",
     flexDirection: "row",
     width: "100%",
     maxWidth: width > 1024 ? height * 0.55 : height,

@@ -32,7 +32,7 @@ const Column = ({ position, type, actions }: any) => {
           <View style={styles.home}>
             <View
               ref={(ref) => onLayout(ref, "playerHome3")}
-              style={[styles.playerHome, {marginTop: 20}]}
+              style={[styles.playerHome, { marginTop: 20 }]}
             />
           </View>
           <View style={[styles.home, styles.row]}>

@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     borderColor: "#f00",
     borderStyle: "solid",
     flex: 0.81,
-    paddingLeft: 25,
     display: "flex",
     flexDirection: "row",
   },
@@ -138,7 +137,6 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     flex: 0.81,
     flexDirection: "row",
-    paddingRight: 25,
     flexWrap: "wrap",
   },
   bottomLeft: {
@@ -149,7 +147,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "flex-end",
-    paddingLeft: 25,
     flexWrap: "wrap",
   },
   topLeftHome: {
@@ -195,7 +192,6 @@ const styles = StyleSheet.create({
     borderColor: "#f00",
     borderStyle: "solid",
     flex: 0.81,
-    paddingRight: 25,
     display: "flex",
     flexDirection: "row",
   },

@@ -84,10 +84,9 @@ class DrawDhayam extends React.Component<props, states> {
 const userSize = (100 - (screen.width / screen.height) * 100) / 2;
 const styles = StyleSheet.create({
   container: {
-    width: screen.width < 1024 ? screen.width : 1024,
-    height: screen.width < 1024 ? screen.width : 1024,
-    paddingLeft: 5,
-    paddingRight: 5,
+    width: screen.width < 1024 ? screen.width -20 : 1024,
+    height: screen.width < 1024 ? screen.width -20 : 1024,
+    margin: 10,
     borderWidth: 0,
     alignItems: "center",
     justifyContent: "center",
