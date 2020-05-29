@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import * as CellActions from "../actions";
 import { bindActionCreators } from "redux";
-import DrawDhayam from "../views/DrawDhayam";
+import DrawDhayam from "../views/dhayam/DrawDhayam";
 import {
   getPlayer1TravelPath,
   getPlayer1Coins,
@@ -12,6 +12,8 @@ import {
   getPlayer3TravelPath,
   getPlayer4TravelPath,
 } from "../selecters";
+import { getCurrentUser } from "../selecters/user.selecter";
+import { getRoom } from "../selecters/room.selecter";
 
 const mapStateToProps = (state: any) => ({
   travelPath: getPlayer1TravelPath(state),
@@ -35,6 +37,8 @@ const mapStateToProps = (state: any) => ({
     travelPath: getPlayer4TravelPath(state),
     color: "#cc3300",
   },
+  currentUser: getCurrentUser(state),
+  room: getRoom(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

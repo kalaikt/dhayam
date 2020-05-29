@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import Avatar from "./Avatar";
+import Avatar from "../user/Avatar";
 
 const Dice = () => {
   const [randam, setState] = useState(0);

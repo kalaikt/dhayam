@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import DrawDhayam from "../containers/DrawDhayam.containers";
+import CreateUser from "./user/CreateUser";
 
 const Home = () => {
   return (
     <View style={styles.container}>
-      <DrawDhayam />
+      <CreateUser />
     </View>
   );
 };

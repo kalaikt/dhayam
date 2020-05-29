@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import Avatar from "./Avatar";
+import Avatar from "../user/Avatar";
 import Dice from "./Dice";
 
 const Player = ({ align, name }: any) => {
@@ -17,8 +17,7 @@ const Player = ({ align, name }: any) => {
           { alignItems: align == "right" ? "flex-end" : "flex-start" },
         ]}
       >
-        <Avatar />
-        <Text>{name}</Text>
+        <Avatar name={name} />
       </View>
       {align == "left" && (
         <View style={styles.flex}>

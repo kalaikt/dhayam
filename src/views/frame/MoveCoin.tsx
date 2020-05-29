@@ -19,6 +19,7 @@ interface props {
   cellsLayout: any;
   travelPath: any;
   color: string;
+  isCurrentUser: boolean;
 }
 
 class MoveCoin extends React.Component<props, states> {
@@ -47,6 +48,8 @@ class MoveCoin extends React.Component<props, states> {
       (p: any) => p.location == location && p.index == index
     );
 
+    if (!layout.length) return;
+
     layout[0].layout.measure(
       (
         x: number,
@@ -56,8 +59,8 @@ class MoveCoin extends React.Component<props, states> {
         pageX: number,
         pageY: number
       ) => {
-        const dx = (width * 0.15);
-        const dy = this.screen.width > 414 ? -(height * 0.5) :-(height * 0.8);
+        const dx = width * 0.15;
+        const dy = this.screen.width > 414 ? -(height * 0.5) : -(height * 0.1);
         const tovalue = {
           x: pageX + dx,
           y: pageY + dy,
@@ -93,6 +96,7 @@ class MoveCoin extends React.Component<props, states> {
   }
 
   moveCoin(event: any) {
+    if(!this.props.isCurrentUser) return;
     const randam = Math.floor(Math.random() * 6) + 1;
     //const randam = 1;
     console.log(randam);
@@ -113,15 +117,15 @@ class MoveCoin extends React.Component<props, states> {
           pageY: number
         ) => {
           let dx = 20;
-          let dy = 50;
+          let dy = -20;
           if (this.screen.width < 450) {
             dx = 10;
-            dy = 37;
+            dy = -15;
           }
 
           this.state.pan.setValue({
             x: pageX + width / 2 - dx,
-            y: pageY + height / 2 - dy,
+            y: pageY + height / 2 + dy,
           });
 
           this.setState({ showIcon: true });
