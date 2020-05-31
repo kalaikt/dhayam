@@ -158,19 +158,23 @@ class DrawDhayam extends React.Component<props, states> {
         >
           {topTable.map((player: any, index: number) => (
             <Player
+              key={`topTable${index}`}
               name={player.username}
               align={topTable.length == 1 || index == 1 ? "right" : "left"}
             />
           ))}
         </View>
-        <View style={styles.container}>
-          <Row position="top" />
-          <RowMid />
-          <Row position="bottom" />
+        <View style={styles.dhayam}>
+          <View style={styles.container}>
+            <Row position="top" />
+            <RowMid />
+            <Row position="bottom" />
+          </View>
         </View>
         <View style={styles.playerSection}>
           {bottomTable.map((player: any, index: number) => (
             <Player
+              key={`bottomTable${index}`}
               name={player.username}
               align={index == 1 ? "right" : "left"}
             />
@@ -181,14 +185,21 @@ class DrawDhayam extends React.Component<props, states> {
   }
 }
 const userSize = (100 - (screen.width / screen.height) * 100) / 2;
+const width = screen.width > 760 ? 0 : 0;
 const styles = StyleSheet.create({
   container: {
-    width: screen.width < 1024 ? screen.width - 20 : 1024,
-    height: screen.width < 1024 ? screen.width - 20 : 1024,
-    margin: 10,
+    width: screen.width < 1024 ? screen.width - width : 1024,
+    height: screen.width < 1024 ? screen.width - width : 1024,
+    padding: 10,
     borderWidth: 0,
     alignItems: "center",
     justifyContent: "center",
+  },
+  dhayam: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    borderWidth: 0,
   },
   playerSection: {
     flexDirection: "row",
@@ -196,7 +207,8 @@ const styles = StyleSheet.create({
     height: `${userSize - 1}%`,
   },
   mainContainer: {
-    paddingTop: screen.height * 0.04,
+    paddingTop:
+      screen.width > 760 ? screen.height * 0.02 : screen.height * 0.04,
     width: "100%",
     height: "100%",
     borderWidth: 0,

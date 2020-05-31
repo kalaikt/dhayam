@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as CellActions from "../../actions";
-import { getCellsLayout } from "../../selecters";
+import { getCellsLayout, getLayout } from "../../selecters";
 
 type states = {
   pan: Animated.ValueXY;
@@ -20,6 +20,8 @@ interface props {
   travelPath: any;
   color: string;
   isCurrentUser: boolean;
+  actions: any;
+  coinLayout: any;
 }
 
 class MoveCoin extends React.Component<props, states> {
@@ -42,64 +44,54 @@ class MoveCoin extends React.Component<props, states> {
     this.moveCoin = this.moveCoin.bind(this);
   }
 
-  getLayout = (idx: number) => {
-    const { location, index } = this.props.travelPath[idx];
-    const layout = this.state.cellsLayout.filter(
-      (p: any) => p.location == location && p.index == index
-    );
-
-    if (!layout.length) return;
-
-    layout[0].layout.measure(
-      (
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-        pageX: number,
-        pageY: number
-      ) => {
-        const dx = width * 0.15;
-        const dy = this.screen.width > 414 ? -(height * 0.5) : -(height * 0.1);
-        const tovalue = {
-          x: pageX + dx,
-          y: pageY + dy,
-        };
-        //this.setState({ value: { x, y, width, height, pageX, pageY } });
-        this.setState({ value: tovalue });
-      }
-    );
-  };
-
   move(value: number, ind = 0) {
-    const dx = this.screen.width > 414 ? -10 : 10;
-    const dy = -10;
+    console.log("Method: move");
     if (value == ind) {
       this.state.pan.setValue(this.state.value);
       return;
     }
 
-    this.getLayout(this.travelIndex);
+    const { location, index } = this.props.travelPath[this.travelIndex];
     this.travelIndex++;
 
-    setTimeout(() => {
-      Animated.sequence([
-        Animated.timing(this.state.pan, {
-          delay: 300,
-          toValue: this.state.value,
-        }),
-        /* Animated.timing(this.state.pan, {
-          toValue: this.state.value,
-        }), */
-      ]).start(() => this.move(value, ++ind));
-    }, 10);
+    this.props.actions.setCellLocation(location, index).then((data: any) => {
+      this.props.coinLayout.layout.measure(
+        (
+          x: number,
+          y: number,
+          width: number,
+          height: number,
+          pageX: number,
+          pageY: number
+        ) => {
+          const dx = width * 0.15;
+          const dy =
+            this.screen.width > 414 ? -(height * 0.1) : -(height * 0.1);
+          const tovalue = {
+            x: pageX + dx,
+            y: pageY + dy,
+          };
+
+          this.setState({ value: tovalue });
+          Animated.sequence([
+            Animated.timing(this.state.pan, {
+              delay: 300,
+              toValue: this.state.value,
+            }),
+            Animated.timing(this.state.pan, {
+              toValue: this.state.value,
+            }),
+          ]).start(() => this.move(value, ++ind));
+        }
+      );
+    });
   }
 
   moveCoin(event: any) {
-    if(!this.props.isCurrentUser) return;
+    if (!this.props.isCurrentUser) return;
     const randam = Math.floor(Math.random() * 6) + 1;
     //const randam = 1;
-    console.log(randam);
+    console.log(randam, this.state.pan.getLayout());
     if (this.travelIndex == 0 && randam != 1) return;
     if (this.travelIndex + randam <= this.props.travelPath.length)
       this.move(randam);
@@ -131,7 +123,7 @@ class MoveCoin extends React.Component<props, states> {
           this.setState({ showIcon: true });
         }
       );
-    }, 500);
+    }, 2000);
   }
 
   render() {
@@ -161,6 +153,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: any) => ({
   cellsLayout: getCellsLayout(state),
+  coinLayout: getLayout(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

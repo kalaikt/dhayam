@@ -19,7 +19,7 @@ const Room = ({ currentUser, actions }: any) => {
     });
 
     socket.on("startGame", () => {
-      setTimeout(() => navigation.navigate("Dhayam"), 2000);
+      setTimeout(() => navigation.navigate("Dhayam"), 1000);
     });
   });
 

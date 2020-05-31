@@ -1,5 +1,6 @@
 export const UPDATE_CELL_LAYOUT = "UPDATE_CELL_LAYOUT";
 export const UPDATE_HOME_CELL_LAYOUT = "UPDATE_HOME_CELL_LAYOUT";
+export const SET_CELL_FILTER = "SET_CELL_FILTER";
 export const GET_CELLS = "GET_CELLS";
 export const ADD_USER = "ADD_USER";
 export const SET_USER_LIST = "SET_USER_LIST";

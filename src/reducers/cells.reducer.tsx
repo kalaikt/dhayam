@@ -2,6 +2,7 @@ import {
   UPDATE_CELL_LAYOUT,
   UPDATE_HOME_CELL_LAYOUT,
   GET_CELLS,
+  SET_CELL_FILTER,
 } from "../constants/ActionTypes";
 import {
   PlayersHome,
@@ -20,6 +21,7 @@ const initialState = {
     player3: getPlayer3Paths(),
     player4: getPlayer4Paths(),
   },
+  filter: { location: "", index: 0 },
 };
 
 const updateCellLayout = (state: any, action: any) => {
@@ -39,6 +41,16 @@ export default function cellsReducer(state = initialState, action: any) {
 
     case UPDATE_HOME_CELL_LAYOUT:
       return updateHomeCellLayout(state, action);
+
+    case SET_CELL_FILTER:
+      state.filter = {
+        location: action.location,
+        index: action.index,
+      };
+      return {
+        ...state,
+        filter: { location: action.location, index: action.index },
+      };
 
     case GET_CELLS:
       return state;

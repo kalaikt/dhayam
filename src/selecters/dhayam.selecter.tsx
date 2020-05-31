@@ -6,6 +6,21 @@ const getPlayer1Path = (state: any) => state.cells.path.player1;
 const getPlayer2Path = (state: any) => state.cells.path.player2;
 const getPlayer3Path = (state: any) => state.cells.path.player3;
 const getPlayer4Path = (state: any) => state.cells.path.player4;
+const getCellLocation = (state: any) => state.cells.filter;
+
+export const getLayout = createSelector(
+  [getCellsRespose, getCellLocation],
+  (layouts, filter) => {
+    const result = layouts.filter(
+      (cell: any) =>
+        cell.location === filter.location && cell.index === filter.index
+    );
+
+    if (result.length) return result[0];
+
+    return {};
+  }
+);
 
 export const getPlayer1TravelPath = createSelector(getPlayer1Path, (paths) => {
   return paths;

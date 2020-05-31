@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 const Avatar = ({ name }: any) => {
   const { width } = Dimensions.get("screen");
-  let size = 120;
+  let size = 80;
   if (width < 450) size = 50;
 
   return (
@@ -17,7 +17,7 @@ const Avatar = ({ name }: any) => {
 
 const styles = StyleSheet.create({
   avatar: {
-    padding: 10,
+    //padding: 10,
   },
 });
 export default Avatar;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TextInput, Button, Keyboard } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -7,10 +7,12 @@ import { useNavigation } from "@react-navigation/native";
 import { socket } from "../../client";
 
 const CreateUser = ({ actions }: any) => {
-  const [value, onChangeText] = React.useState("");
+  const [value, onChangeText] = useState("");
   const navigation = useNavigation();
 
   const onPress = () => {
+    if (value == "") return;
+
     Keyboard.dismiss();
     actions.addUser(value);
     socket.emit("joinRoom", value, "1234567");
