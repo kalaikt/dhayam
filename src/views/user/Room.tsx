@@ -14,9 +14,9 @@ const Room = ({ currentUser, players, actions }: any) => {
   const [userList, setUsers] = useState([]);
 
   useEffect(() => {
-    if (!userList.length) socket.emit("getPlayers");
+    if (!userList.length) socket.emit("referesh");
     console.log(userList)
-    socket.on("roomUsers", (users: any) => {
+    socket.on("getPlayers", (users: any) => {
       setUsers(users);
       actions.joinRoom(users, "1234567");
     });
@@ -27,7 +27,7 @@ const Room = ({ currentUser, players, actions }: any) => {
   });
 
   const startGame = () => {
-    socket.emit("manualStartGame");
+    socket.emit("startGameManually");
   };
 
   return (

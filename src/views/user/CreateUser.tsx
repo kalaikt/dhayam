@@ -23,7 +23,7 @@ const CreateUser = ({ actions }: any) => {
     socket.emit("joinRoom", value, "1234567");
   };
 
-  socket.on("roomUsers", (users: any) => {
+  socket.on("getPlayers", (users: any) => {
     navigation.navigate("Room");
   });
 

@@ -7,7 +7,7 @@ export const socket = io.connect(SERVER.endpoint, {
 
 /* socket.emit("joinRoom", "Kalai", "1234567");
 
-socket.on("roomUsers", (data: any) => {
+socket.on("getPlayers", (data: any) => {
   console.log("room", data);
 });
  */

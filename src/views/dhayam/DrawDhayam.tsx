@@ -8,6 +8,7 @@ import { socket } from "../../client";
 const screen = Dimensions.get("window");
 
 type props = {
+  [key: string]: any;
   player1: any;
   player2: any;
   player3: any;
@@ -17,6 +18,10 @@ type props = {
   currentUser: any;
   room: any;
 };
+
+interface Player {
+  [key: string]: any;
+}
 
 type states = {
   player1: any;
@@ -53,15 +58,38 @@ class DrawDhayam extends React.Component<props, states> {
         : { ...user, isCurrentUser: false }
     );
 
-    players.sort((a: any, b: any) =>
-      a.isCurrentUser == b.isCurrentUser ? 0 : a.isCurrentUser ? -1 : 1
-    );
-
     return players;
   };
 
   setPlayerTravelPath = (players: any) => {
     switch (players.length) {
+      case 2:
+        return players.map((palyer: any) =>
+          palyer.isCurrentUser
+            ? { ...palyer, ...this.props.player1 }
+            : { ...palyer, ...this.props.player3 }
+        );
+
+      default:
+        const curent_index = players.findIndex(
+          (player: any) => player.isCurrentUser
+        );
+
+        return players.map((player: any, index: number) => {
+          const indx =
+            curent_index + index < players.length ? curent_index + index : 0;
+          const playerPath = `player${
+            players.length == 3 && index == 2 ? 4 : indx + 1
+          }`;
+
+          return {
+            ...players[indx],
+            ...this.props[`${playerPath}`],
+          };
+        });
+    }
+
+    /* switch (players.length) {
       case 2:
         return players.map((palyer: any) =>
           palyer.isCurrentUser
@@ -83,7 +111,7 @@ class DrawDhayam extends React.Component<props, states> {
           else if (index == 2) return { ...palyer, ...this.props.player4 };
           else return { ...palyer, ...this.props.player3 };
         });
-    }
+    } */
   };
 
   UNSAFE_componentWillMount() {
@@ -137,10 +165,15 @@ class DrawDhayam extends React.Component<props, states> {
     const bottomTable: any = [];
 
     players.map((player: any, index: number) => {
-      if (index % 2 == 0) bottomTable.push(player);
+      if (
+        index == 0 ||
+        (players.length == 4 && index == 3) ||
+        (players.length == 3 && index == 2)
+      )
+        bottomTable.push(player);
       else topTable.push(player);
     });
-
+    console.log(topTable.length, bottomTable.length);
     return { topTable, bottomTable };
   };
 
@@ -153,7 +186,9 @@ class DrawDhayam extends React.Component<props, states> {
         <View
           style={[
             styles.playerSection,
-            topTable.length == 1 && bottomTable.length == 1 && styles.alignRight,
+            topTable.length == 1 &&
+              bottomTable.length == 1 &&
+              styles.alignRight,
           ]}
         >
           {topTable.map((player: any, index: number) => (
