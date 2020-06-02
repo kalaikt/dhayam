@@ -104,17 +104,17 @@ class DrawDhayam extends React.Component<props, states> {
       travelPath: this.props.travelPath,
     });
 
-    setTimeout(() => {
-      let players: any = this.setCurrentUser(this.props.room.players);
-      const { topTable, bottomTable } = this.buildPlayer(
-        this.setPlayerTravelPath(players)
-      );
+    //setTimeout(() => {
+    let players: any = this.setCurrentUser(this.props.room.players);
+    const { topTable, bottomTable } = this.buildPlayer(
+      this.setPlayerTravelPath(players)
+    );
 
-      this.setState({
-        topTable: topTable,
-        bottomTable: bottomTable,
-      });
-    }, 1000);
+    this.setState({
+      topTable: topTable,
+      bottomTable: bottomTable,
+    });
+    // }, 1000);
   }
 
   loadCoin = (player: any) => {
@@ -153,14 +153,18 @@ class DrawDhayam extends React.Component<props, states> {
         <View
           style={[
             styles.playerSection,
-            topTable.length == 1 && styles.alignRight,
+            topTable.length == 1 && bottomTable.length == 1 && styles.alignRight,
           ]}
         >
           {topTable.map((player: any, index: number) => (
             <Player
               key={`topTable${index}`}
               name={player.username}
-              align={topTable.length == 1 || index == 1 ? "right" : "left"}
+              align={
+                (topTable.length == 1 && bottomTable.length == 1) || index == 1
+                  ? "right"
+                  : "left"
+              }
             />
           ))}
         </View>

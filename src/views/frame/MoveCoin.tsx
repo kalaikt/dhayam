@@ -123,7 +123,7 @@ class MoveCoin extends React.Component<props, states> {
           this.setState({ showIcon: true });
         }
       );
-    }, 2000);
+    }, 1000);
   }
 
   render() {
