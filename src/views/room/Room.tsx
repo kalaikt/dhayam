@@ -3,22 +3,23 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as RoomActions from "../../actions/room.action";
-import Avatar from "./Avatar";
+import Avatar from "../user/Avatar";
 import { useNavigation } from "@react-navigation/native";
 import { socket } from "../../client";
 import { getCurrentUser } from "../../selecters/user.selecter";
-import { getPlayers } from "../../selecters/room.selecter";
+import { getRoom } from "../../selecters/room.selecter";
+import PropTypes from "prop-types";
 
-const Room = ({ currentUser, players, actions }: any) => {
+const Room = ({ currentUser, room, actions }: any) => {
   const navigation = useNavigation();
-  const [userList, setUsers] = useState([]);
+  const [playerList, setPlayers] = useState(room.players || []);
 
   useEffect(() => {
-    if (!userList.length) socket.emit("referesh");
-    console.log(userList)
-    socket.on("getPlayers", (users: any) => {
-      setUsers(users);
-      actions.joinRoom(users, "1234567");
+    if (!playerList.length) socket.emit("referesh");
+
+    socket.on("getPlayers", (players: any) => {
+      setPlayers(players);
+      actions.joinRoom(players, room.name);
     });
   });
 
@@ -32,12 +33,12 @@ const Room = ({ currentUser, players, actions }: any) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Text>Back</Text>
+      <TouchableOpacity>
+        <Text>{room.name}</Text>
       </TouchableOpacity>
       <View style={styles.players}>
-        {userList.map((user: any, index: number) => (
-          <Avatar key={`avatar${index}`} name={user.username} />
+        {playerList.map((player: any, index: number) => (
+          <Avatar key={`avatar${index}`} name={player.username} />
         ))}
       </View>
       <TouchableOpacity onPress={startGame}>
@@ -66,9 +67,15 @@ const styles = StyleSheet.create({
   },
 });
 
+Room.propsTypes = {
+  currentUser: PropTypes.object,
+  room: PropTypes.object,
+  actions: PropTypes.object,
+};
+
 const mapStateToProps = (state: any) => ({
   currentUser: getCurrentUser(state),
-  players: getPlayers(state),
+  room: getRoom(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

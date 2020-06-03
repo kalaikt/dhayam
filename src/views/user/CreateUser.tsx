@@ -1,18 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, TextInput, Button, Keyboard } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Button,
+  Keyboard,
+  AsyncStorage,
+} from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { addUser } from "../../actions/user.action";
-import { joinRoom } from "../../actions/room.action";
 import { useNavigation } from "@react-navigation/native";
-import { socket } from "../../client";
 
 const CreateUser = ({ actions }: any) => {
   const [value, onChangeText] = useState("");
   const navigation = useNavigation();
 
   useEffect(() => {
-    //socket.emit("reset");
+    AsyncStorage.getItem("username", (error, name) => {
+      if (name?.length) {
+        actions.addUser(name);
+        navigation.navigate("CreateRoom");
+      }
+    });
   });
 
   const onPress = () => {
@@ -20,15 +30,8 @@ const CreateUser = ({ actions }: any) => {
 
     Keyboard.dismiss();
     actions.addUser(value);
-    socket.emit("joinRoom", value, "1234567");
-  };
-
-  socket.on("getPlayers", (users: any) => {
-    navigation.navigate("Room");
-  });
-
-  const onReset = () => {
-    socket.emit("reset");
+    AsyncStorage.setItem("username", value);
+    navigation.navigate("CreateRoom");
   };
 
   return (
@@ -38,7 +41,6 @@ const CreateUser = ({ actions }: any) => {
         placeholder="Enter your name"
       />
       <Button title="Add User" onPress={onPress} />
-      <Button title="Reset" onPress={onReset} />
     </View>
   );
 };
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = (dispatch: any) => ({
-  actions: bindActionCreators({ addUser, joinRoom }, dispatch),
+  actions: bindActionCreators({ addUser }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateUser);

@@ -7,3 +7,4 @@ export const SET_USER_LIST = "SET_USER_LIST";
 export const CREATE_ROOM = "CREATE_ROOM";
 export const JOIN_ROOM = "JOIN_ROOM";
 export const REJOIN_ROOM = "REJOIN_ROOM";
+export const SET_CURRENT_ROOM = "SET_CURRENT_ROOM";

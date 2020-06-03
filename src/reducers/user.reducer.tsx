@@ -1,6 +1,6 @@
 import { ADD_USER } from "../constants/ActionTypes";
 
-const initialState: any = {currentUser: {}};
+const initialState: any = {};
 
 export default function userReducer(state = initialState, action: any) {
   switch (action.type) {

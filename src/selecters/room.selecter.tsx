@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 
 const room = (state: any) => state.room;
-const players = (state: any) => state.players;
+const players = (state: any) => state.room.players;
 
 export const getRoom = createSelector(room, (room) => {
   return room;

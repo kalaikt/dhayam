@@ -3,7 +3,6 @@ import { StyleSheet, View, Dimensions } from "react-native";
 import { Row, RowMid } from "../frame/rows";
 import MoveCoin from "../frame/MoveCoin";
 import Player from "./Player";
-import { socket } from "../../client";
 
 const screen = Dimensions.get("window");
 
@@ -62,56 +61,26 @@ class DrawDhayam extends React.Component<props, states> {
   };
 
   setPlayerTravelPath = (players: any) => {
-    switch (players.length) {
-      case 2:
-        return players.map((palyer: any) =>
-          palyer.isCurrentUser
-            ? { ...palyer, ...this.props.player1 }
-            : { ...palyer, ...this.props.player3 }
-        );
+    const curent_index = players.findIndex(
+      (player: any) => player.isCurrentUser
+    );
 
-      default:
-        const curent_index = players.findIndex(
-          (player: any) => player.isCurrentUser
-        );
+    return players.map((player: any, index: number) => {
+      const indx =
+        curent_index + index < players.length ? curent_index + index : 0;
+      const playerPath = `player${
+        players.length === 2 && index != curent_index
+          ? 3
+          : players.length == 3 && index == 2
+          ? 4
+          : indx + 1
+      }`;
 
-        return players.map((player: any, index: number) => {
-          const indx =
-            curent_index + index < players.length ? curent_index + index : 0;
-          const playerPath = `player${
-            players.length == 3 && index == 2 ? 4 : indx + 1
-          }`;
-
-          return {
-            ...players[indx],
-            ...this.props[`${playerPath}`],
-          };
-        });
-    }
-
-    /* switch (players.length) {
-      case 2:
-        return players.map((palyer: any) =>
-          palyer.isCurrentUser
-            ? { ...palyer, ...this.props.player1 }
-            : { ...palyer, ...this.props.player3 }
-        );
-
-      case 3:
-        return players.map((palyer: any, index: number) => {
-          if (palyer.isCurrentUser) return { ...palyer, ...this.props.player1 };
-          else if (index == 1) return { ...palyer, ...this.props.player2 };
-          else return { ...palyer, ...this.props.player4 };
-        });
-
-      default:
-        return players.map((palyer: any, index: number) => {
-          if (palyer.isCurrentUser) return { ...palyer, ...this.props.player1 };
-          else if (index == 1) return { ...palyer, ...this.props.player2 };
-          else if (index == 2) return { ...palyer, ...this.props.player4 };
-          else return { ...palyer, ...this.props.player3 };
-        });
-    } */
+      return {
+        ...players[indx],
+        ...this.props[`${playerPath}`],
+      };
+    });
   };
 
   UNSAFE_componentWillMount() {

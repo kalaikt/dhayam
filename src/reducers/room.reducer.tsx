@@ -1,4 +1,9 @@
-import { CREATE_ROOM, JOIN_ROOM, REJOIN_ROOM } from "../constants/ActionTypes";
+import {
+  CREATE_ROOM,
+  JOIN_ROOM,
+  REJOIN_ROOM,
+  SET_CURRENT_ROOM,
+} from "../constants/ActionTypes";
 
 const initialState: any = {};
 
@@ -7,22 +12,28 @@ export default function roomReducer(state = initialState, action: any) {
     case CREATE_ROOM:
       return {
         ...state,
-        players: [{ username: action.username, room: action.room }],
-        room: action.room,
+        players: [{ username: action.username }],
+        name: action.room,
+      };
+
+    case SET_CURRENT_ROOM:
+      return {
+        ...state,
+        name: action.room,
       };
 
     case JOIN_ROOM:
       return {
         ...state,
         players: action.players,
-        room: action.room,
+        name: action.room,
       };
 
     case REJOIN_ROOM:
       return {
         ...state,
         players: action.players,
-        room: action.room,
+        name: action.room,
       };
 
     default:
