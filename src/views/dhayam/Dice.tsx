@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import Avatar from "../user/Avatar";
+import { socket } from "../../client";
 
 const Dice = () => {
   const [randam, setState] = useState(0);
   const dial = () => {
     const randNum = Math.floor(Math.random() * 6) + 1;
     setState(randNum);
-
-    console.log();
   };
   return (
     <View style={styles.dice} onTouchStart={dial}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { Row, RowMid } from "../frame/rows";
 import MoveCoin from "../frame/MoveCoin";
@@ -62,29 +62,37 @@ class DrawDhayam extends React.Component<props, states> {
 
   setPlayerTravelPath = (players: any) => {
     const curent_index = players.findIndex(
-      (player: any) => player.isCurrentUser
+      (player: any) => player.isCurrentUser === true
     );
-
+      let indx = curent_index;
     return players.map((player: any, index: number) => {
-      const indx =
-        curent_index + index < players.length ? curent_index + index : 0;
+      if(indx >= players.length) indx = 0;
+
       const playerPath = `player${
-        players.length === 2 && index != curent_index
+        players.length == 2 && index == 1
           ? 3
           : players.length == 3 && index == 2
           ? 4
-          : indx + 1
+          : index + 1
       }`;
 
+      if (this.props.currentUser.username == "Kumar")
+        console.log(
+          players[indx].username,
+          curent_index,
+          index,
+          playerPath,
+          indx
+        );
       return {
-        ...players[indx],
+        ...players[indx++],
         ...this.props[`${playerPath}`],
       };
     });
   };
 
   UNSAFE_componentWillMount() {
-    let players: any = this.setCurrentUser(this.props.room.players);
+    /* let players: any = this.setCurrentUser(this.props.room.players);
     const { topTable, bottomTable } = this.buildPlayer(
       this.setPlayerTravelPath(players)
     );
@@ -92,7 +100,7 @@ class DrawDhayam extends React.Component<props, states> {
     this.setState({
       topTable: topTable,
       bottomTable: bottomTable,
-    });
+    }); */
   }
 
   componentDidMount() {
@@ -124,6 +132,7 @@ class DrawDhayam extends React.Component<props, states> {
         layout={h.layout}
         travelPath={player.travelPath}
         color={player.color}
+        playerName={player.username}
         isCurrentUser={player.isCurrentUser}
       />
     ));
@@ -142,7 +151,7 @@ class DrawDhayam extends React.Component<props, states> {
         bottomTable.push(player);
       else topTable.push(player);
     });
-    console.log(topTable.length, bottomTable.length);
+
     return { topTable, bottomTable };
   };
 

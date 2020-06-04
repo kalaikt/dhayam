@@ -25,8 +25,12 @@ export const updateHomeCellLayout = (
 export const setCellLocation = (location: string, index: number) => {
   return (dispatch: any, getState: any) => {
     return new Promise((resolve, reject) => {
-      dispatch({ type: types.SET_CELL_FILTER, location, index });
-      resolve();
+      if (location.length) {
+        dispatch({ type: types.SET_CELL_FILTER, location, index });
+        resolve();
+      } else {
+        reject("Location not found");
+      }
     });
   };
 };

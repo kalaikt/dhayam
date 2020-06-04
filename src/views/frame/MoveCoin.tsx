@@ -1,10 +1,11 @@
-import { Animated, StyleSheet, Dimensions, Easing } from "react-native";
+import { Animated, StyleSheet, Dimensions, Easing , Text} from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as CellActions from "../../actions";
-import { getCellsLayout, getLayout } from "../../selecters";
+import { getCellsLayout, getLayout, getCurrentUser } from "../../selecters";
+import { socket } from "../../client";
 
 type states = {
   pan: Animated.ValueXY;
@@ -22,6 +23,7 @@ interface props {
   isCurrentUser: boolean;
   actions: any;
   coinLayout: any;
+  playerName: string;
 }
 
 class MoveCoin extends React.Component<props, states> {
@@ -45,7 +47,6 @@ class MoveCoin extends React.Component<props, states> {
   }
 
   move(value: number, ind = 0) {
-    console.log("Method: move");
     if (value == ind) {
       this.state.pan.setValue(this.state.value);
       return;
@@ -90,11 +91,16 @@ class MoveCoin extends React.Component<props, states> {
   moveCoin(event: any) {
     if (!this.props.isCurrentUser) return;
     const randam = Math.floor(Math.random() * 6) + 1;
-    //const randam = 1;
-    console.log(randam, this.state.pan.getLayout());
+    console.log(randam);
     if (this.travelIndex == 0 && randam != 1) return;
-    if (this.travelIndex + randam <= this.props.travelPath.length)
-      this.move(randam);
+    if (this.travelIndex + randam <= this.props.travelPath.length) {
+      socket.emit(
+        "updatePosition",
+        this.props.playerName,
+        this.props.coin,
+        randam
+      );
+    }
   }
 
   componentDidMount() {
@@ -124,6 +130,15 @@ class MoveCoin extends React.Component<props, states> {
         }
       );
     }, 1000);
+
+    socket.on(
+      "moveCoin",
+      (player: any, coinIndex: number, diceNumber: number) => {
+        if (player === this.props.playerName && this.props.coin === coinIndex) {
+          this.move(diceNumber);
+        }
+      }
+    );
   }
 
   render() {
@@ -131,6 +146,7 @@ class MoveCoin extends React.Component<props, states> {
     if (this.screen.width < 450) size = 20;
     return (
       <Animated.View style={[this.state.pan.getLayout(), styles.coin]}>
+        {/* <Text>{this.props.playerName}</Text> */}
         {this.state.showIcon && (
           <Icon
             name="location-on"
