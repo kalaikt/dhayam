@@ -33,6 +33,8 @@ type states = {
 };
 
 class DrawDhayam extends React.Component<props, states> {
+  private playerOrder: any = [];
+
   constructor(props: any) {
     super(props);
 
@@ -64,9 +66,11 @@ class DrawDhayam extends React.Component<props, states> {
     const curent_index = players.findIndex(
       (player: any) => player.isCurrentUser === true
     );
-      let indx = curent_index;
+    let indx = curent_index;
+    this.playerOrder = [];
+
     return players.map((player: any, index: number) => {
-      if(indx >= players.length) indx = 0;
+      if (indx >= players.length) indx = 0;
 
       const playerPath = `player${
         players.length == 2 && index == 1
@@ -75,33 +79,15 @@ class DrawDhayam extends React.Component<props, states> {
           ? 4
           : index + 1
       }`;
+      const plr = players[indx++];
+      this.playerOrder.push(plr);
 
-      if (this.props.currentUser.username == "Kumar")
-        console.log(
-          players[indx].username,
-          curent_index,
-          index,
-          playerPath,
-          indx
-        );
       return {
-        ...players[indx++],
+        ...plr,
         ...this.props[`${playerPath}`],
       };
     });
   };
-
-  UNSAFE_componentWillMount() {
-    /* let players: any = this.setCurrentUser(this.props.room.players);
-    const { topTable, bottomTable } = this.buildPlayer(
-      this.setPlayerTravelPath(players)
-    );
-
-    this.setState({
-      topTable: topTable,
-      bottomTable: bottomTable,
-    }); */
-  }
 
   componentDidMount() {
     this.setState({
@@ -109,17 +95,17 @@ class DrawDhayam extends React.Component<props, states> {
       travelPath: this.props.travelPath,
     });
 
-    //setTimeout(() => {
     let players: any = this.setCurrentUser(this.props.room.players);
     const { topTable, bottomTable } = this.buildPlayer(
       this.setPlayerTravelPath(players)
     );
 
+    this.props.actions.updatePlayerOrder(this.playerOrder);
+
     this.setState({
       topTable: topTable,
       bottomTable: bottomTable,
     });
-    // }, 1000);
   }
 
   loadCoin = (player: any) => {
@@ -134,6 +120,7 @@ class DrawDhayam extends React.Component<props, states> {
         color={player.color}
         playerName={player.username}
         isCurrentUser={player.isCurrentUser}
+        noOfPlayers={this.props.room.players.length}
       />
     ));
   };
@@ -201,6 +188,7 @@ class DrawDhayam extends React.Component<props, states> {
     );
   }
 }
+
 const userSize = (100 - (screen.width / screen.height) * 100) / 2;
 const width = screen.width > 760 ? 0 : 0;
 const styles = StyleSheet.create({

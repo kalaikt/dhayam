@@ -1,13 +1,16 @@
 import { SERVER } from "../constants/server";
 import io from "socket.io-client";
+import { YellowBox } from "react-native";
 
-export const socket = io.connect(SERVER.endpoint, {
+YellowBox.ignoreWarnings([
+  "Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?",
+]);
+
+export const socket = io(SERVER.endpoint, {
+  reconnection: true,
+  reconnectionDelay: 500,
+  jsonp: false,
+  reconnectionAttempts: Infinity,
   transports: ["websocket"],
+  forceNew: true,
 });
-
-/* socket.emit("joinRoom", "Kalai", "1234567");
-
-socket.on("getPlayers", (data: any) => {
-  console.log("room", data);
-});
- */

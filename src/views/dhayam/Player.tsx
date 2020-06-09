@@ -8,7 +8,7 @@ const Player = ({ align, name }: any) => {
     <View style={styles.player}>
       {align == "right" && (
         <View style={styles.flex}>
-          <Dice />
+          <Dice playerName={name}/>
         </View>
       )}
       <View
@@ -21,7 +21,7 @@ const Player = ({ align, name }: any) => {
       </View>
       {align == "left" && (
         <View style={styles.flex}>
-          <Dice />
+          <Dice playerName={name} />
         </View>
       )}
     </View>

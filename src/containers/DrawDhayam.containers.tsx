@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import * as CellActions from "../actions";
+import * as DhayamActions from "../actions";
 import { bindActionCreators } from "redux";
 import DrawDhayam from "../views/dhayam/DrawDhayam";
 import {
@@ -42,7 +42,7 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  actions: bindActionCreators(CellActions, dispatch),
+  actions: bindActionCreators(DhayamActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DrawDhayam);

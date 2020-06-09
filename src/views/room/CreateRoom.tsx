@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -11,17 +11,22 @@ import randomatic from "randomatic";
 const CreateRoom = ({ currentUser, actions }: any) => {
   const navigation = useNavigation();
 
-  socket.on("getPlayers", (players: any, room: string) => {
-    actions.joinRoom(players, room).then(() => {
-      navigation.navigate("Room");
+  useEffect(() => {
+    socket.on("getPlayers", (players: any, room: string) => {
+      actions.joinRoom(players, room).then(() => {
+        navigation.navigate("Room");
+      });
     });
-  });
+
+    return () => {
+      socket.off("getPlayers");
+    };
+  }, []);
 
   const createRoom = () => {
     const room: string = randomatic("0", 6);
-    console.log(currentUser, room);
-    actions.setCurrentRoom(room);
-    socket.emit("createRoom", room);
+    actions.setCurrentRoom(room, currentUser.username);
+    socket.emit("createRoom", room, currentUser.username);
     socket.emit("joinRoom", currentUser.username, room);
   };
 

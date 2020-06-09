@@ -21,10 +21,15 @@ const Room = ({ currentUser, room, actions }: any) => {
       setPlayers(players);
       actions.joinRoom(players, room.name);
     });
-  });
 
-  socket.on("startGame", () => {
-    navigation.navigate("Dhayam");
+    socket.on("startGame", () => {
+      navigation.navigate("Dhayam");
+    });
+
+    return () => {
+      socket.off("getPlayers");
+      socket.off("startGame");
+    };
   });
 
   const startGame = () => {
@@ -41,9 +46,11 @@ const Room = ({ currentUser, room, actions }: any) => {
           <Avatar key={`avatar${index}`} name={player.username} />
         ))}
       </View>
-      <TouchableOpacity onPress={startGame}>
-        <Text>Start Game</Text>
-      </TouchableOpacity>
+      {room.createdBy == currentUser.username && (
+        <TouchableOpacity onPress={startGame}>
+          <Text>Start Game</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

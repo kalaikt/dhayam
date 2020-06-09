@@ -23,9 +23,15 @@ export const joinRoom = (players: any, room: string) => {
   };
 };
 
-export const setCurrentRoom = (room: string) => ({
+export const setCurrentRoom = (room: string, createdBy: string = "") => ({
   type: types.SET_CURRENT_ROOM,
   room,
+  createdBy,
+});
+
+export const updatePlayerOrder = (players: any) => ({
+  type: types.UPDATE_PLAYER_ORDER,
+  players,
 });
 
 export const rejoinRoom = (players: any, room: string) => ({

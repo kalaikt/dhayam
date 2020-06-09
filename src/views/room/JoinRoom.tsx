@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -12,11 +12,16 @@ const JoinRoom = ({ currentUser, actions }: any) => {
   const [room, onChangeText] = useState("");
   const navigation = useNavigation();
 
-  socket.on("getPlayers", (players: any, room: string) => {
-    actions.joinRoom(players, room).then(() => {
-      navigation.navigate("Room");
+  useEffect(() => {
+    socket.on("getPlayers", (players: any, room: string) => {
+      actions.joinRoom(players, room).then(() => {
+        navigation.navigate("Room");
+      });
     });
-  });
+    return () => {
+      socket.off("getPlayers");
+    };
+  }, []);
 
   const joinRoom = () => {
     actions.setCurrentRoom(room);
