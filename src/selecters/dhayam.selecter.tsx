@@ -16,7 +16,7 @@ export const getLayout = createSelector(
         cell.location === filter.location && cell.index === filter.index
     );
 
-    if (result.length) return result[0];
+    if (result.length) return result[0].layout;
 
     return {};
   }

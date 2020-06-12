@@ -46,7 +46,7 @@ const Room = ({ currentUser, room, actions }: any) => {
           <Avatar key={`avatar${index}`} name={player.username} />
         ))}
       </View>
-      {room.createdBy == currentUser.username && (
+      {room.createdBy == currentUser.username && playerList.length > 1 && (
         <TouchableOpacity onPress={startGame}>
           <Text>Start Game</Text>
         </TouchableOpacity>

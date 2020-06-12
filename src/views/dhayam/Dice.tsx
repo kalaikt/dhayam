@@ -27,13 +27,11 @@ const Dice = ({ players, playerName, currentUser, room }: any) => {
 
   useEffect(() => {
     socket.on("moveToNextPlayer", (username: string) => {
-      console.log("moveToNextPlayer:", username, playerName);
       if (username == playerName) setActive(true);
       else setActive(false);
     });
 
     socket.on("getDiceValue", (plrName: string, diceValue: number) => {
-      console.log(playerName , plrName,playerName == plrName)
       if (playerName == plrName) setState(diceValue);
     });
 
@@ -44,12 +42,9 @@ const Dice = ({ players, playerName, currentUser, room }: any) => {
     };
   }, []);
 
-  if (playerName == currentUser.username)
+  if (playerName == currentUser.username && isActive)
     return (
-      <View
-        style={[styles.dice, isActive && styles.active]}
-        onTouchStart={roll}
-      >
+      <View style={[styles.dice, styles.active]} onTouchStart={roll}>
         <Text style={styles.text}>{randam == 0 ? "Roll" : randam}</Text>
       </View>
     );

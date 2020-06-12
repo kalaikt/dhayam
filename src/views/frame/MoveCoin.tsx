@@ -1,4 +1,11 @@
-import { Animated, StyleSheet, Dimensions, Easing, Text } from "react-native";
+import {
+  Animated,
+  StyleSheet,
+  Dimensions,
+  Easing,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { bindActionCreators } from "redux";
@@ -14,21 +21,23 @@ type states = {
   cellsLayout: any;
   travelPath: any;
   dice: any;
+  dialed: boolean;
+  players: any;
 };
 interface props {
-  coin: number;
+  coinIndex: number;
   layout: any;
   cellsLayout: any;
   travelPath: any;
   color: string;
   isCurrentUser: boolean;
   actions: any;
-  coinLayout: any;
+  nextCellLayout: any;
   playerName: string;
   currentUser: any;
   noOfPlayers: number;
 }
-
+let size = 40;
 class MoveCoin extends React.Component<props, states> {
   travelIndex = 0;
   animate = React.createRef();
@@ -45,6 +54,8 @@ class MoveCoin extends React.Component<props, states> {
       cellsLayout: props.cellsLayout,
       travelPath: props.travelPath,
       dice: {},
+      dialed: false,
+      players: [],
     };
 
     this.moveCoin = this.moveCoin.bind(this);
@@ -52,6 +63,7 @@ class MoveCoin extends React.Component<props, states> {
 
   nextPlayer = (diceNumber: number) => {
     if (![1, 5, 6].includes(diceNumber)) {
+      this.setState({ dialed: false });
       socket.emit("switchToNextPlayer", this.props.playerName);
     }
   };
@@ -59,6 +71,30 @@ class MoveCoin extends React.Component<props, states> {
   move(value: number, ind = 0) {
     if (value == ind) {
       this.state.pan.setValue(this.state.value);
+      const { location, index } = this.props.travelPath[this.travelIndex - 1];
+
+      let checkOtherPlrsCoinPos = [];
+      this.state.players.forEach((player: any) => {
+        checkOtherPlrsCoinPos = player.coins.filter(
+          (coin: any) =>
+            coin.location == location && coin.currentPosition == index
+        );
+
+        if (checkOtherPlrsCoinPos.length) {
+          const [coin] = checkOtherPlrsCoinPos;
+          socket.emit("cutAndMoveToHome", player.username, coin.coinIndex);
+        }
+      });
+      if (this.props.currentUser.username == this.props.playerName) {
+        socket.emit(
+          "updateCoinPosition",
+          this.props.playerName,
+          this.props.coinIndex,
+          location,
+          this.travelIndex
+        );
+      }
+
       this.nextPlayer(value);
       return;
     }
@@ -67,7 +103,7 @@ class MoveCoin extends React.Component<props, states> {
     this.travelIndex++;
 
     this.props.actions.setCellLocation(location, index).then((data: any) => {
-      this.props.coinLayout.layout.measure(
+      this.props.nextCellLayout.measure(
         (
           x: number,
           y: number,
@@ -100,7 +136,7 @@ class MoveCoin extends React.Component<props, states> {
     });
   }
 
-  moveCoin(event: any) {
+  moveCoin() {
     if (
       !this.props.isCurrentUser ||
       this.props.currentUser.username != this.state.dice.playerName
@@ -108,13 +144,13 @@ class MoveCoin extends React.Component<props, states> {
       return;
 
     const { value } = this.state.dice;
-    console.log(value);
+
     if (this.travelIndex == 0 && value != 1) return;
     if (this.travelIndex + value <= this.props.travelPath.length) {
       socket.emit(
         "updatePosition",
         this.props.playerName,
-        this.props.coin,
+        this.props.coinIndex,
         value
       );
     }
@@ -125,61 +161,168 @@ class MoveCoin extends React.Component<props, states> {
     socket.off("getDiceValue");
     socket.off("updatePosition");
     socket.off("switchToNextPlayer");
+    socket.off("cutAndMoveToHome");
+    socket.off("getPlayers");
   }
 
   componentDidMount() {
     setTimeout(() => {
-      this.props.layout.measure(
-        (
-          x: number,
-          y: number,
-          width: number,
-          height: number,
-          pageX: number,
-          pageY: number
-        ) => {
-          let dx = 20;
-          let dy = -20;
-          if (this.screen.width < 450) {
-            dx = 10;
-            dy = -15;
-          }
-
-          this.state.pan.setValue({
-            x: pageX + width / 2 - dx,
-            y: pageY + height / 2 + dy,
-          });
-
-          this.setState({ showIcon: true });
-        }
-      );
+      this.moveToHome();
     }, 1000);
+
+    socket.on("cutAndMoveToHome", (player: string, coinIndex: number) => {
+      /* if (player == this.props.currentUser.username && this.props.coinIndex)
+        this.moveToHome(); */
+    });
 
     socket.on(
       "moveCoin",
       (player: any, coinIndex: number, diceNumber: number) => {
-        if (player === this.props.playerName && this.props.coin === coinIndex) {
+        if (
+          player === this.props.playerName &&
+          this.props.coinIndex === coinIndex
+        ) {
           this.move(diceNumber);
         }
       }
     );
 
-    socket.on("getDiceValue", (playerName: string, value: number) => {
-      this.setState({
-        dice: {
-          playerName,
-          value,
-        },
-      });
-    });
+    socket.on(
+      "getDiceValue",
+      (playerName: string, value: number, players: any) => {
+        if (
+          playerName == this.props.currentUser.username &&
+          this.props.playerName == playerName
+        ) {
+          this.doAutoPlay(value, players);
+        }
+
+        this.setState({
+          players,
+          dice: {
+            playerName,
+            value,
+          },
+          dialed:
+            this.props.currentUser.username == playerName &&
+            this.travelIndex != this.props.travelPath.length - 1 &&
+            (value == 1 || this.travelIndex >= 1)
+              ? true
+              : false,
+        });
+      }
+    );
   }
 
+  getCoins = (players: any) => {
+    const [player] = players.filter(
+      (player: any) => player.username == this.props.currentUser.username
+    );
+
+    return player.coins;
+  };
+
+  doAutoPlay = (diceNumber: number, players: any) => {
+    const currentPlayerCoins = this.getCoins(players);
+
+    const coins = currentPlayerCoins.filter(
+      (coin: any) =>
+        coin.currentPosition != -1 &&
+        coin.currentPosition != this.props.travelPath.length - 1
+    );
+
+    if (
+      !coins.length ||
+      (this.hasCoinAtHome(currentPlayerCoins) && diceNumber == 1)
+    )
+      return;
+
+    const [coin] = coins;
+    if (
+      (coins.length == 1 && coin.coinIndex == this.props.coinIndex) ||
+      (this.isCoinsAtSamePosition(coins) &&
+        this.props.coinIndex == this.pickCoin(currentPlayerCoins))
+    ) {
+      socket.emit(
+        "updatePosition",
+        this.props.playerName,
+        this.props.coinIndex,
+        diceNumber
+      );
+    }
+  };
+
+  hasCoinAtHome = (coins: any) => {
+    return coins.filter((coin: any) => coin.currentPosition == -1).length;
+  };
+
+  pickCoin = (coins: any) => {
+    return coins.findIndex(
+      (coin: any) =>
+        coin.currentPosition != -1 &&
+        coin.currentPosition != this.props.travelPath.length - 1
+    );
+  };
+
+  isCoinsAtSamePosition = (coins: any) => {
+    let tmpCoins: any = new Set(coins);
+    const duplicates: any = [];
+    const original: any = new Set(coins);
+
+    do {
+      const iterator = tmpCoins.values();
+      const c = iterator.next().value;
+
+      const samePositionCoins = coins.filter(
+        (coin: any) => coin.currentPosition == c.currentPosition
+      );
+
+      original.forEach((coin: any) => {
+        if (coin.currentPosition == c.currentPosition) tmpCoins.delete(coin);
+      });
+
+      duplicates.push(samePositionCoins.length);
+    } while (tmpCoins.size);
+
+    return duplicates.length == 1;
+  };
+
+  moveToHome = () => {
+    this.props.layout.measure(
+      (
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        pageX: number,
+        pageY: number
+      ) => {
+        let dx = 20;
+        let dy = -20;
+        if (this.screen.width < 450) {
+          dx = 10;
+          dy = -15;
+        }
+
+        this.state.pan.setValue({
+          x: pageX + width / 2 - dx,
+          y: pageY + height / 2 + dy,
+        });
+
+        this.setState({ showIcon: true });
+      }
+    );
+  };
+
   render() {
-    let size = 40;
     if (this.screen.width < 450) size = 20;
+
     return (
       <Animated.View style={[this.state.pan.getLayout(), styles.coin]}>
         {/* <Text>{this.props.playerName}</Text> */}
+        {this.props.isCurrentUser && this.state.dialed && (
+          <View style={styles.dialed} />
+        )}
         {this.state.showIcon && this.props.isCurrentUser && (
           <Icon
             name="location-on"
@@ -201,12 +344,22 @@ const styles = StyleSheet.create({
   coin: {
     position: "absolute",
     zIndex: 200,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dialed: {
+    width: size * 0.3,
+    height: size * 0.3,
+    borderWidth: 1,
+    borderRadius: (size * 0.3) / 2,
+    bottom: -3,
+    position: "absolute",
   },
 });
 
 const mapStateToProps = (state: any) => ({
   cellsLayout: getCellsLayout(state),
-  coinLayout: getLayout(state),
+  nextCellLayout: getLayout(state),
   currentUser: getCurrentUser(state),
 });
 

@@ -3,6 +3,8 @@ import { StyleSheet, View, Dimensions } from "react-native";
 import { Row, RowMid } from "../frame/rows";
 import MoveCoin from "../frame/MoveCoin";
 import Player from "./Player";
+import { socket } from "../../client";
+import { useNavigation } from "@react-navigation/native";
 
 const screen = Dimensions.get("window");
 
@@ -106,16 +108,21 @@ class DrawDhayam extends React.Component<props, states> {
       topTable: topTable,
       bottomTable: bottomTable,
     });
+
+    /* socket.on("disconnect", () => {
+      const navigation = useNavigation();
+      navigation.navigate("Room");
+    }); */
   }
 
   loadCoin = (player: any) => {
     if (!player.coins) return;
 
-    return player.coins.map((h: any, index: number) => (
+    return player.coins.map((coinHome: any, index: number) => (
       <MoveCoin
-        coin={index}
-        key={`player${index}`}
-        layout={h.layout}
+        coinIndex={index}
+        key={`${player.username}coin${index}`}
+        layout={coinHome.layout}
         travelPath={player.travelPath}
         color={player.color}
         playerName={player.username}
