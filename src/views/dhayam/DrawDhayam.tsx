@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { Row, RowMid } from "../frame/rows";
-import MoveCoin from "../frame/MoveCoin";
+import Coin from "../frame/Coin";
 import Player from "./Player";
 import { socket } from "../../client";
 import { useNavigation } from "@react-navigation/native";
@@ -119,7 +119,7 @@ class DrawDhayam extends React.Component<props, states> {
     if (!player.coins) return;
 
     return player.coins.map((coinHome: any, index: number) => (
-      <MoveCoin
+      <Coin
         coinIndex={index}
         key={`${player.username}coin${index}`}
         layout={coinHome.layout}

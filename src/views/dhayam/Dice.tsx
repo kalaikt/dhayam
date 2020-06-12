@@ -31,8 +31,11 @@ const Dice = ({ players, playerName, currentUser, room }: any) => {
       else setActive(false);
     });
 
-    socket.on("getDiceValue", (plrName: string, diceValue: number) => {
-      if (playerName == plrName) setState(diceValue);
+    socket.on("getDiceValue", (plrName: string, diceValue: number, players: any, isAllCoinsAtHome: boolean) => {
+      if (playerName == plrName) {
+        setState(diceValue);
+        setDhayamOccured(!isAllCoinsAtHome);
+      }
     });
 
     return () => {

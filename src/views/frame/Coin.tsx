@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import * as CellActions from "../../actions";
 import { getCellsLayout, getLayout, getCurrentUser } from "../../selecters";
 import { socket } from "../../client";
+import { SAFEZONE, HOMES } from "../../constants";
 
 type states = {
   pan: Animated.ValueXY;
@@ -38,11 +39,19 @@ interface props {
   noOfPlayers: number;
 }
 let size = 40;
-class MoveCoin extends React.Component<props, states> {
+
+interface CoinType {
+  location: string;
+  index: number;
+}
+
+class Coin extends React.Component<props, states> {
   travelIndex = 0;
   animate = React.createRef();
   dy = 0;
   screen = Dimensions.get("screen");
+  private players = [];
+  private coin: CoinType = { location: "", index: -1 };
 
   constructor(props: any) {
     super(props);
@@ -62,36 +71,65 @@ class MoveCoin extends React.Component<props, states> {
   }
 
   nextPlayer = (diceNumber: number) => {
+    if (this.travelIndex == 0) this.setState({ dialed: false });
     if (![1, 5, 6].includes(diceNumber)) {
       this.setState({ dialed: false });
       socket.emit("switchToNextPlayer", this.props.playerName);
     }
   };
 
+  isSafeZone = (location: string, index: number) => {
+    return SAFEZONE.filter(
+      (zone: any) => zone.location == location && zone.index == index
+    ).length;
+  };
+
   move(value: number, ind = 0) {
     if (value == ind) {
       this.state.pan.setValue(this.state.value);
       const { location, index } = this.props.travelPath[this.travelIndex - 1];
+      this.coin = { location, index };
+      socket.emit(
+        "checkCoinLocation",
+        this.props.playerName,
+        location,
+        index,
+        this.travelIndex - 1
+      );
+      /* let checkOtherPlrsCoinPos = [];
+      if (
+        this.props.currentUser.username == this.props.playerName &&
+        !this.isSafeZone(location, index) &&
+        !HOMES.includes(location)
+      ) {
+        this.players.forEach((player: any) => {
+          if (this.props.playerName == player.username) return;
+          console.log(player.coins);
+          console.log(location, index);
+          checkOtherPlrsCoinPos = player.coins.filter(
+            (coin: any) =>
+              coin.location == location &&
+              coin.cellIndex == index &&
+              (this.travelIndex - 1 > 11 || coin.currentPosition > 11)
+          );
 
-      let checkOtherPlrsCoinPos = [];
-      this.state.players.forEach((player: any) => {
-        checkOtherPlrsCoinPos = player.coins.filter(
-          (coin: any) =>
-            coin.location == location && coin.currentPosition == index
-        );
-
-        if (checkOtherPlrsCoinPos.length) {
-          const [coin] = checkOtherPlrsCoinPos;
-          socket.emit("cutAndMoveToHome", player.username, coin.coinIndex);
-        }
-      });
+          if (checkOtherPlrsCoinPos.length) {
+            console.log(checkOtherPlrsCoinPos);
+            checkOtherPlrsCoinPos.forEach((coin: any) => {
+              socket.emit("cutAndMoveToHome", player.username, coin.coinIndex);
+            });
+          }
+        });
+      }
+*/
       if (this.props.currentUser.username == this.props.playerName) {
         socket.emit(
           "updateCoinPosition",
           this.props.playerName,
           this.props.coinIndex,
           location,
-          this.travelIndex
+          index,
+          this.travelIndex - 1
         );
       }
 
@@ -170,9 +208,33 @@ class MoveCoin extends React.Component<props, states> {
       this.moveToHome();
     }, 1000);
 
+    socket.on(
+      "checkCoinLocation",
+      (player: string, location: string, index: number, coinIndex: number) => {
+        if (
+          this.coin.location == location &&
+          this.coin.index == index &&
+          player != this.props.playerName &&
+          !this.isSafeZone(location, index) &&
+          !HOMES.includes(location) &&
+          (this.travelIndex - 1 > 11 || coinIndex > 11)
+        ) {
+          socket.emit(
+            "cutAndMoveToHome",
+            this.props.playerName,
+            this.props.coinIndex
+          );
+        }
+      }
+    );
+
     socket.on("cutAndMoveToHome", (player: string, coinIndex: number) => {
-      /* if (player == this.props.currentUser.username && this.props.coinIndex)
-        this.moveToHome(); */
+      if (
+        player == this.props.playerName &&
+        this.props.coinIndex == coinIndex
+      ) {
+        this.moveToHome(true);
+      }
     });
 
     socket.on(
@@ -180,7 +242,8 @@ class MoveCoin extends React.Component<props, states> {
       (player: any, coinIndex: number, diceNumber: number) => {
         if (
           player === this.props.playerName &&
-          this.props.coinIndex === coinIndex
+          this.props.coinIndex === coinIndex &&
+          this.travelIndex + diceNumber <= this.props.travelPath.length
         ) {
           this.move(diceNumber);
         }
@@ -197,6 +260,8 @@ class MoveCoin extends React.Component<props, states> {
           this.doAutoPlay(value, players);
         }
 
+        this.players = players;
+
         this.setState({
           players,
           dice: {
@@ -205,7 +270,7 @@ class MoveCoin extends React.Component<props, states> {
           },
           dialed:
             this.props.currentUser.username == playerName &&
-            this.travelIndex != this.props.travelPath.length - 1 &&
+            this.travelIndex + value <= this.props.travelPath.length &&
             (value == 1 || this.travelIndex >= 1)
               ? true
               : false,
@@ -287,7 +352,7 @@ class MoveCoin extends React.Component<props, states> {
     return duplicates.length == 1;
   };
 
-  moveToHome = () => {
+  moveToHome = (isCoinCut: boolean = false) => {
     this.props.layout.measure(
       (
         x: number,
@@ -312,6 +377,21 @@ class MoveCoin extends React.Component<props, states> {
         this.setState({ showIcon: true });
       }
     );
+
+    if (isCoinCut) {
+      this.coin.location = "";
+      this.coin.index = -1;
+      socket.emit(
+        "updateCoinPosition",
+        this.props.playerName,
+        this.props.coinIndex,
+        "",
+        -1,
+        -1
+      );
+    }
+
+    this.travelIndex = 0;
   };
 
   render() {
@@ -367,4 +447,4 @@ const mapDispatchToProps = (dispatch: any) => ({
   actions: bindActionCreators(CellActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MoveCoin);
+export default connect(mapStateToProps, mapDispatchToProps)(Coin);
