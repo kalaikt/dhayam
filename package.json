@@ -51,5 +51,8 @@
     "typescript": "^3.8.3",
     "yarn": "^1.22.4"
   },
-  "private": true
+  "private": true,
+  "resolutions": {
+    "lodash": "^4.17.15"
+  }
 }
