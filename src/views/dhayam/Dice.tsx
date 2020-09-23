@@ -6,6 +6,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as RoomActions from "../../actions/room.action";
 import PropTypes from "prop-types";
+import { CAN_DICE_REROLL } from "../../constants";
 
 const Dice = ({ players, playerName, currentUser, room }: any) => {
   const [randam, setState] = useState(0);
@@ -13,13 +14,11 @@ const Dice = ({ players, playerName, currentUser, room }: any) => {
   const [isDhayamOccured, setDhayamOccured] = useState(false);
 
   const roll = () => {
-    const reDial = [1, 5, 6];
     const randNum = Math.floor(Math.random() * 6) + 1;
     setState(randNum);
     socket.emit("changeDice", room.name, currentUser.username, randNum);
     if (randNum === 1) setDhayamOccured(true);
-    //if (!reDial.includes(randNum) && !isDhayamOccured) setActive(false);
-    if (!isDhayamOccured && !reDial.includes(randNum)) {
+    if (!isDhayamOccured && randNum != 1) {
       setActive(false);
       socket.emit("switchToNextPlayer", currentUser.username);
     }

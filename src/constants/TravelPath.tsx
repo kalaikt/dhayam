@@ -296,8 +296,13 @@ export const TravelPath = {
   ],
 };
 
-export const HOMES = ["topLeft", "topRight", "bottomLeft", "bottomRight"];
-
+export const HOMES: Array<string> = [
+  "topLeft",
+  "topRight",
+  "bottomLeft",
+  "bottomRight",
+];
+export const CAN_DICE_REROLL: Array<number> = [5, 6];
 export const SAFEZONE = [
   { location: "top", index: 3 },
   { location: "top", index: 21 },

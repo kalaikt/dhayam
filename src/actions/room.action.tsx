@@ -39,3 +39,29 @@ export const rejoinRoom = (players: any, room: string) => ({
   room,
   players,
 });
+
+export const updateCoinLocation = (
+  player: string,
+  location: string,
+  index: number,
+  coinIndex: number
+) => ({
+  type: types.UPDATE_COIN_POSITION,
+  player,
+  location,
+  index,
+  coinIndex,
+});
+
+export const setLocationFilter = (filter: Object) => {
+  return (dispatch: any, getState: any) => {
+    return new Promise((resolve, reject) => {
+      if (!!filter) {
+        dispatch({ type: types.SET_PLAYER_FILTER, filter });
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  };
+};

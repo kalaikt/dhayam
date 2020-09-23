@@ -101,18 +101,13 @@ class DrawDhayam extends React.Component<props, states> {
     const { topTable, bottomTable } = this.buildPlayer(
       this.setPlayerTravelPath(players)
     );
-
+      console.log(this.playerOrder);
     this.props.actions.updatePlayerOrder(this.playerOrder);
 
     this.setState({
       topTable: topTable,
       bottomTable: bottomTable,
     });
-
-    /* socket.on("disconnect", () => {
-      const navigation = useNavigation();
-      navigation.navigate("Room");
-    }); */
   }
 
   loadCoin = (player: any) => {
